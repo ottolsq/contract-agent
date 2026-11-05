@@ -85,6 +85,17 @@ curl -N -X POST http://127.0.0.1:8000/api/chat/stream \
   -d '{"messages":[{"role":"user","content":"你好"}]}'
 ```
 
+> **PowerShell 用户注意**：PowerShell 里 `curl` 是 `Invoke-WebRequest` 的别名，不支持 `-H` / `-d`。请显式使用 `curl.exe`，并把 JSON 写入文件，避免引号被 PowerShell 处理掉：
+
+```powershell
+$json = @'
+{"messages":[{"role":"user","content":"你好"}]}
+'@
+[IO.File]::WriteAllText("$PWD\body.json", $json, [Text.UTF8Encoding]::new($false))
+curl.exe -N -X POST "http://127.0.0.1:8000/api/chat/stream" -H "Content-Type: application/json" --data-binary "@body.json"
+Remove-Item body.json
+```
+
 ## 收录的法规
 
 来源：[LawRefBook/Laws](https://github.com/LawRefBook/Laws)（依据《著作权法》第五条属于公有领域）。
