@@ -9,10 +9,14 @@ from contract_agent.main import app
 
 
 @pytest.fixture(autouse=True)
-def clear_settings_cache():
-    get_settings.cache_clear()
+def clear_settings_cache(monkeypatch):
+    """隔离环境：测试用独立的 Settings，不读 .env，不受真实环境影响。"""
+    from contract_agent import config, main
+
+    test_settings = config.Settings(_env_file=None)
+    monkeypatch.setattr(config, "get_settings", lambda: test_settings)
+    monkeypatch.setattr(main, "get_settings", lambda: test_settings)
     yield
-    get_settings.cache_clear()
 
 
 async def test_health_reports_missing_key(monkeypatch):
@@ -72,7 +76,10 @@ async def test_stream_chat_yields_deltas(monkeypatch):
 
 
 async def test_chat_streams_sse(monkeypatch):
-    monkeypatch.setenv("LLM_API_KEY", "test-key")
+    from contract_agent import config, main
+
+    test_settings = config.Settings(_env_file=None, llm_api_key="test-key")
+    monkeypatch.setattr(main, "get_settings", lambda: test_settings)
 
     async def fake_stream(settings, messages):
         yield "你好"

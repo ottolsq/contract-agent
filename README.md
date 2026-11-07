@@ -98,7 +98,9 @@ Remove-Item body.json
 
 ## 收录的法规
 
-来源：[LawRefBook/Laws](https://github.com/LawRefBook/Laws)（依据《著作权法》第五条属于公有领域）。
+主要来源：[国家法律法规数据库 flk.npc.gov.cn](https://flk.npc.gov.cn/)（搜索入口：https://flk.npc.gov.cn/search），官方 DOCX 手动下载后由 `scripts/import_official_laws.py` 导入，覆盖 17 部、1887 条。
+镜像补充：[LawRefBook/Laws](https://github.com/LawRefBook/Laws)，仅用于官方库缺失的《工资支付暂行规定》（20 条）。
+法律法规属于公有领域（依据《著作权法》第五条）。
 共 **18 部、1907 条**，每部条号连续、无缺条。
 
 ### 劳动 / labor（12 部，601 条）
@@ -153,10 +155,11 @@ Remove-Item body.json
 ## 数据处理
 
 ```bash
-# 下载法规文本（data/raw 已被 gitignore）
-uv run python scripts/fetch_laws.py
+# 方式一：从官方 DOCX 导入（推荐；DOCX 从 flk.npc.gov.cn 手动下载，存放于 ../laws）
+uv run python scripts/import_official_laws.py --source ../laws
 
-# 解析成条文级 JSONL
+# 方式二：从 GitHub 镜像下载后解析（仅补充官方没有的法规）
+uv run python scripts/fetch_laws.py
 uv run python scripts/prepare_laws.py --raw-dir data/raw
 ```
 
@@ -181,8 +184,9 @@ contract-agent/
 │   ├── schemas.py     # 请求 / 响应模型
 │   └── main.py        # FastAPI 应用与流式接口
 ├── scripts/
-│   ├── fetch_laws.py  # 下载法规文本
-│   └── prepare_laws.py# 生成条文级 JSONL
+│   ├── import_official_laws.py # 官方 DOCX 导入（主路径）
+│   ├── fetch_laws.py           # 镜像下载（补充）
+│   └── prepare_laws.py         # 镜像 Markdown 解析
 ├── tests/
 ├── data/
 │   ├── raw/           # 原始法规文件（不入库）

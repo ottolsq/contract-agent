@@ -12,6 +12,9 @@ ARTICLE_RE = re.compile(
 HEADING_RE = re.compile(
     r"^#{1,4}\s+(第[一二三四五六七八九十百千万零〇两]+(?:分)?[编章节].*)$"
 )
+DOCX_HEADING_RE = re.compile(
+    r"^(第[一二三四五六七八九十百千万零〇两]+(?:分)?[编章节])\s*(.*)$"
+)
 
 CN_DIGITS = {
     "零": 0,
@@ -168,6 +171,66 @@ def parse_law_markdown(text: str, source: str = "") -> list[Article]:
             )
             for article in articles
         ]
+    return articles
+
+
+def parse_law_docx(path: Path) -> list[Article]:
+    """解析国家法律法规数据库下载的 DOCX（纯文本段落）。"""
+    from docx import Document
+
+    document = Document(path)
+    paragraphs: list[str] = []
+    for paragraph in document.paragraphs:
+        text = re.sub(r"\s+", " ", paragraph.text).strip()
+        if text:
+            paragraphs.append(text)
+
+    if not paragraphs:
+        return []
+
+    law = paragraphs[0]
+    chapter = ""
+    current_article = ""
+    current_lines: list[str] = []
+    articles: list[Article] = []
+
+    def flush() -> None:
+        if not current_article:
+            return
+        body = "\n".join(line for line in current_lines if line).strip()
+        articles.append(
+            Article(
+                law=law,
+                article=current_article,
+                article_no=chinese_to_int(current_article[1:-1]),
+                chapter=chapter,
+                text=body,
+                source=str(path),
+                domain=domain_for_law(law),
+            )
+        )
+
+    for text in paragraphs[1:]:
+        heading_match = DOCX_HEADING_RE.match(text)
+        if heading_match:
+            flush()
+            current_article = ""
+            current_lines = []
+            chapter = text
+            continue
+
+        article_match = ARTICLE_RE.match(text)
+        if article_match:
+            flush()
+            current_article = article_match.group(1)
+            first_line = article_match.group(2).strip()
+            current_lines = [first_line] if first_line else []
+            continue
+
+        if current_article:
+            current_lines.append(text)
+
+    flush()
     return articles
 
 
