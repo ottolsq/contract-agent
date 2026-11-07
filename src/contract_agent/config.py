@@ -19,6 +19,11 @@ class Settings(BaseSettings):
     llm_timeout: float = 60.0
     # 仅重试瞬时故障（429 / 5xx / 连接错误）；流式已输出内容时不回退重试
     llm_max_retries: int = 3
+    # 向量库持久化目录，索引属于构建产物，不入库
+    chroma_dir: str = "data/chroma"
+    # 启动时预加载 embedding 模型：线上建议开启，避免首个请求等十几秒；
+    # 用 --reload 开发时可设为 false
+    warmup_on_startup: bool = True
 
 
 @lru_cache
