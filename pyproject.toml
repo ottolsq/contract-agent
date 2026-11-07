@@ -1,13 +1,14 @@
 [project]
 name = "contract-agent"
 version = "0.1.0"
-description = "劳动合同审查与劳动法知识库 Agent"
+description = "面向科技公司的合同审查 Agent：对内劳动人事、对外商业与技术合同，基于法规知识库做检索、引用与风险定位"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi>=0.115",
     "uvicorn[standard]>=0.30",
     "openai>=1.40",
+    "pydantic>=2.7",
     "pydantic-settings>=2.4",
     "python-dotenv>=1.0",
     "httpx>=0.27",

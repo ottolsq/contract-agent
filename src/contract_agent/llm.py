@@ -1,16 +1,22 @@
 from collections.abc import AsyncIterator
 from typing import Any
 
+import httpx
 from openai import AsyncOpenAI
 
 from .config import Settings
 
 
-def create_client(settings: Settings) -> AsyncOpenAI:
+def create_client(
+    settings: Settings,
+    http_client: httpx.AsyncClient | None = None,
+) -> AsyncOpenAI:
     return AsyncOpenAI(
         api_key=settings.llm_api_key,
         base_url=settings.llm_base_url,
         timeout=settings.llm_timeout,
+        max_retries=settings.llm_max_retries,
+        http_client=http_client,
     )
 
 

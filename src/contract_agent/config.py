@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     llm_model: str = "deepseek-chat"
     llm_temperature: float = 0.2
     llm_timeout: float = 60.0
+    # 仅重试瞬时故障（429 / 5xx / 连接错误）；流式已输出内容时不回退重试
+    llm_max_retries: int = 3
 
 
 @lru_cache
