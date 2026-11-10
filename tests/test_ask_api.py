@@ -21,6 +21,8 @@ def isolate_settings(monkeypatch):
     )
     monkeypatch.setattr(config, "get_settings", lambda: test_settings)
     monkeypatch.setattr(main, "get_settings", lambda: test_settings)
+    # 默认不碰真实索引；需要空索引的用例自行覆盖
+    monkeypatch.setattr(main.vectorstore, "count", lambda *args, **kwargs: 1907)
     yield test_settings
 
 
@@ -110,6 +112,21 @@ async def test_empty_hits_still_return_references_event(monkeypatch):
     assert events[-1] == "[DONE]"
 
 
+async def test_empty_index_reports_operational_error(monkeypatch):
+    """索引为空和"确实没匹配到"必须区分，否则会被误判成法条不覆盖。"""
+
+    async def fake_stream(settings, messages):
+        yield "不应被调用"
+
+    monkeypatch.setattr(main.vectorstore, "count", lambda *args, **kwargs: 0)
+
+    response = await _post(monkeypatch, hits=[], stream=fake_stream)
+
+    assert _events(response.text) == [
+        {"error": "知识库索引为空，请先运行 scripts/build_index.py --rebuild"}
+    ]
+
+
 async def test_retrieval_failure_returns_error_without_references(monkeypatch):
     response = await _post(monkeypatch, retrieve_error=RuntimeError("chroma down"))
 
@@ -152,6 +169,8 @@ async def test_missing_api_key_returns_503(monkeypatch):
         {"question": "问", "top_k": 0},
         {"question": "问", "top_k": 100},
         {"question": ""},
+        {"question": "   "},
+        {"question": "\n\t "},
     ],
 )
 async def test_invalid_payload_is_rejected(monkeypatch, payload):

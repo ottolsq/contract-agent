@@ -30,6 +30,19 @@ def load_articles(path: Path) -> list[Article]:
     return articles
 
 
+def dedupe(articles: list[Article]) -> list[Article]:
+    """同一部法律的同一条号只保留一条，避免入库时主键冲突。"""
+    seen: set[tuple[str, int]] = set()
+    unique: list[Article] = []
+    for item in articles:
+        key = (item.law, item.article_no)
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(item)
+    return unique
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="构建法条向量索引")
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
@@ -45,16 +58,23 @@ def main() -> int:
     if existing and not args.rebuild:
         print(f"索引已有 {existing} 条；如需重建请加 --rebuild")
         return 1
-    if args.rebuild:
-        vectorstore.reset(settings)
-        print("已删除旧索引")
 
     articles = load_articles(args.input)
+    unique = dedupe(articles)
+    if len(unique) != len(articles):
+        print(f"跳过重复条号 {len(articles) - len(unique)} 条")
+    articles = unique
+
     dim = embeddings.dimension()
     print(f"待入库 {len(articles)} 条，模型 {embeddings.MODEL_NAME}（{dim} 维）")
 
-    started = time.perf_counter()
+    # 先完成读取与向量化，再删旧索引：中途失败时旧索引仍然可用
     vectors = embeddings.embed_texts([item.text for item in articles])
+
+    started = time.perf_counter()
+    if args.rebuild:
+        vectorstore.reset(settings)
+        print("已删除旧索引")
     added = vectorstore.add_articles(articles, vectors, settings)
     elapsed = time.perf_counter() - started
 

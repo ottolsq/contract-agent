@@ -8,11 +8,15 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Sequence
 
 from .vectorstore import Hit
 
 MAX_ARTICLE_CHARS = 800
+
+# 外部内容可能包含 </content> 之类的闭合标签，提前替换成全角，防止提前闭合数据块
+_DATA_TAG_RE = re.compile(r"</?\s*content\s*>", re.IGNORECASE)
 
 SYSTEM_PROMPT = """你是科技公司法务的合同与法规检索助手，服务对象是公司法务和做合同初审的业务同学。
 
@@ -39,11 +43,19 @@ def _truncate(text: str, limit: int = MAX_ARTICLE_CHARS) -> str:
     return text if len(text) <= limit else text[:limit] + "……"
 
 
+def _neutralize(text: str) -> str:
+    """把外部内容里的 content 标签替换成全角，避免伪造数据块边界。"""
+    return _DATA_TAG_RE.sub(
+        lambda match: match.group(0).replace("<", "＜").replace(">", "＞"),
+        text,
+    )
+
+
 def format_articles(hits: Sequence[Hit]) -> str:
     if not hits:
         return "（本次未检索到相关法条）"
     lines = [
-        f"{index}. 《{hit.law}》{hit.article}：{_truncate(hit.text)}"
+        f"{index}. 《{hit.law}》{hit.article}：{_neutralize(_truncate(hit.text))}"
         for index, hit in enumerate(hits, 1)
     ]
     return "\n".join(lines)
@@ -63,7 +75,7 @@ def build_messages(
     user_content = (
         f"【合同类型】{type_label}\n\n"
         f"【法条资料】\n{format_articles(hits)}\n\n"
-        f"【待审内容】\n<content>\n{question.strip()}\n</content>\n\n"
+        f"【待审内容】\n<content>\n{_neutralize(question.strip())}\n</content>\n\n"
         "【任务】依据上述法条资料回答【待审内容】中的问题，按输出格式作答。"
     )
     return [

@@ -45,7 +45,7 @@ def _collection(chroma_dir: str, model_name: str):
     import chromadb  # 惰性导入，避免 import main 时就加载向量库
 
     client = chromadb.PersistentClient(path=chroma_dir)
-    return client.get_or_create_collection(
+    collection = client.get_or_create_collection(
         name=COLLECTION_NAME,
         metadata={
             "hnsw:space": "cosine",
@@ -54,6 +54,40 @@ def _collection(chroma_dir: str, model_name: str):
         },
         embedding_function=None,
     )
+    # 每次取得集成都校验一次（空库不校验，用于首次建库）
+    if collection.count() > 0:
+        _ensure_model_matches(collection, model_name)
+    return collection
+
+
+def _ensure_model_matches(collection: Any, model_name: str) -> None:
+    metadata = collection.metadata or {}
+    stored_model = metadata.get(META_MODEL)
+    stored_dim = metadata.get(META_DIM)
+    expected_dim = dimension(model_name)
+
+    if stored_model != model_name or stored_dim != expected_dim:
+        raise RuntimeError(
+            f"索引是用模型 {stored_model}（{stored_dim} 维）建的，"
+            f"当前是 {model_name}（{expected_dim} 维）。请重建索引。"
+        )
+
+
+def _is_stale_handle(exc: Exception) -> bool:
+    """索引被另一个进程重建后，缓存里的 collection 句柄会指向已删除的集合。"""
+    if type(exc).__name__ in {"NotFoundError", "InvalidCollectionException"}:
+        return True
+    return "does not exist" in str(exc).lower()
+
+
+def _with_refresh(fn, settings: Settings | None, model_name: str):
+    try:
+        return fn(get_collection(settings, model_name))
+    except Exception as exc:
+        if not _is_stale_handle(exc):
+            raise
+        _collection.cache_clear()
+        return fn(get_collection(settings, model_name))
 
 
 def get_collection(settings: Settings | None = None, model_name: str = MODEL_NAME):
@@ -63,16 +97,7 @@ def get_collection(settings: Settings | None = None, model_name: str = MODEL_NAM
 
 def verify_model(settings: Settings | None = None, model_name: str = MODEL_NAME) -> None:
     """索引与当前模型不一致时直接报错，避免静默召回错误结果。"""
-    collection = get_collection(settings, model_name)
-    metadata = collection.metadata or {}
-    stored_model = metadata.get(META_MODEL)
-    stored_dim = metadata.get(META_DIM)
-
-    if stored_model != model_name or stored_dim != dimension(model_name):
-        raise RuntimeError(
-            f"索引是用模型 {stored_model}（{stored_dim} 维）建的，"
-            f"当前是 {model_name}（{dimension(model_name)} 维）。请重建索引。"
-        )
+    get_collection(settings, model_name)  # 取得集合时已校验
 
 
 def add_articles(
@@ -120,17 +145,19 @@ def search(
     settings: Settings | None = None,
     model_name: str = MODEL_NAME,
 ) -> list[Hit]:
-    collection = get_collection(settings, model_name)
     where: dict[str, Any] | None = None
     if domains:
         where = {"domain": {"$in": list(domains)}}
 
-    result = collection.query(
-        query_embeddings=[list(vector)],
-        n_results=top_k,
-        where=where,
-        include=["documents", "metadatas", "distances"],
-    )
+    def _query(collection):
+        return collection.query(
+            query_embeddings=[list(vector)],
+            n_results=top_k,
+            where=where,
+            include=["documents", "metadatas", "distances"],
+        )
+
+    result = _with_refresh(_query, settings, model_name)
 
     hits: list[Hit] = []
     metadatas = result.get("metadatas") or [[]]
@@ -153,7 +180,7 @@ def search(
 
 
 def count(settings: Settings | None = None, model_name: str = MODEL_NAME) -> int:
-    return get_collection(settings, model_name).count()
+    return _with_refresh(lambda collection: collection.count(), settings, model_name)
 
 
 def reset(settings: Settings | None = None, model_name: str = MODEL_NAME) -> None:

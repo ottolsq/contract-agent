@@ -22,23 +22,24 @@ if not logging.getLogger().handlers:
 
 
 def _warm_up() -> None:
-    """预加载模型并连一次向量库，避免首个请求等十几秒。"""
+    """预加载模型并校验索引；失败直接让启动失败，避免服务带着坏索引对外提供服务。"""
     settings = get_settings()
     started = time.perf_counter()
-    try:
-        embeddings.get_model()
-        indexed = vectorstore.count(settings)
-        if indexed:
-            vectorstore.verify_model(settings)
-        _log(
-            event="warmup",
-            model=embeddings.MODEL_NAME,
-            indexed=indexed,
-            elapsed_ms=round((time.perf_counter() - started) * 1000),
+
+    embeddings.get_model()
+    indexed = vectorstore.count(settings)
+    if indexed == 0:
+        raise RuntimeError(
+            "索引为空：请先运行 uv run python scripts/build_index.py --rebuild"
         )
-    except Exception as exc:
-        # 预热失败不阻塞启动；真正的错误会在请求时以更明确的错误返回
-        _log(event="warmup_failed", error=type(exc).__name__, detail=str(exc)[:200])
+    vectorstore.verify_model(settings)  # 模型名或维度不匹配会在这里抛出
+
+    _log(
+        event="warmup",
+        model=embeddings.MODEL_NAME,
+        indexed=indexed,
+        elapsed_ms=round((time.perf_counter() - started) * 1000),
+    )
 
 
 @asynccontextmanager
@@ -134,6 +135,12 @@ async def _ask_events(settings: Settings, payload: AskRequest):
         top_similarity=hits[0].similarity if hits else None,
         elapsed_ms=elapsed_ms,
     )
+
+    # 空结果要区分"索引没建"和"确实没匹配到"，否则会误判成法条不覆盖
+    if not hits and vectorstore.count(settings) == 0:
+        _log(event="index_empty", trace_id=trace_id)
+        yield _sse({"error": "知识库索引为空，请先运行 scripts/build_index.py --rebuild"})
+        return
 
     yield _sse({"references": _references(hits)})
 
