@@ -3,7 +3,6 @@
 import pytest
 
 from contract_agent import retriever
-from contract_agent.vectorstore import Hit
 
 
 def test_domain_presets():
@@ -42,21 +41,3 @@ def test_retrieve_passes_preset_and_top_k(monkeypatch):
     retriever.retrieve("竞业限制", "external", 7)
 
     assert captured == {"domains": ("civil", "tech"), "top_k": 7}
-
-
-def test_format_hits_lists_law_and_article():
-    hit = Hit(
-        law="中华人民共和国劳动合同法",
-        article="第二十四条",
-        article_no=24,
-        chapter="第二章",
-        text="竞业限制期限不得超过二年。",
-        domain="labor",
-        source="flk",
-        similarity=0.9,
-    )
-
-    text = retriever.format_hits([hit])
-
-    assert "《中华人民共和国劳动合同法》第二十四条" in text
-    assert "竞业限制期限不得超过二年" in text

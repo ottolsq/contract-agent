@@ -10,7 +10,7 @@ from fastapi.responses import StreamingResponse
 
 from . import embeddings, vectorstore
 from .config import Settings, get_settings
-from .llm import stream_chat
+from .llm import close_client, stream_chat
 from .prompts import build_messages
 from .retriever import aretrieve
 from .schemas import AskRequest, ChatRequest
@@ -46,7 +46,10 @@ def _warm_up() -> None:
 async def lifespan(_: FastAPI):
     if get_settings().warmup_on_startup:
         await asyncio.to_thread(_warm_up)
-    yield
+    try:
+        yield
+    finally:
+        await close_client()
 
 
 app = FastAPI(title="Contract Agent", version="0.2.0", lifespan=lifespan)

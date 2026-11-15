@@ -7,7 +7,6 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Sequence
 
 from . import embeddings, vectorstore
 from .config import Settings
@@ -51,10 +50,3 @@ async def aretrieve(
     settings: Settings | None = None,
 ) -> list[Hit]:
     return await asyncio.to_thread(retrieve, query, contract_type, top_k, settings)
-
-
-def format_hits(hits: Sequence[Hit]) -> str:
-    """把检索结果压成提示词里的法条清单，同时用于日志。"""
-    return "\n".join(
-        f"《{hit.law}》{hit.article}：{hit.text}" for hit in hits
-    )

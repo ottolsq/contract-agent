@@ -6,6 +6,8 @@ from openai import AsyncOpenAI
 
 from .config import Settings
 
+_client: AsyncOpenAI | None = None
+
 
 def create_client(
     settings: Settings,
@@ -20,16 +22,33 @@ def create_client(
     )
 
 
+def get_client(settings: Settings) -> AsyncOpenAI:
+    """进程内复用一个客户端，让连接池跨请求复用；由 lifespan 统一关闭。"""
+    global _client
+    if _client is None:
+        _client = create_client(settings)
+    return _client
+
+
+async def close_client() -> None:
+    global _client
+    if _client is None:
+        return
+    client, _client = _client, None
+    await client.close()
+
+
 async def stream_chat(
     settings: Settings,
     messages: list[dict[str, str]],
 ) -> AsyncIterator[str]:
     """调用 OpenAI 兼容接口，逐 token 产出文本。"""
-    client = create_client(settings)
+    client = get_client(settings)
     stream: Any = await client.chat.completions.create(
         model=settings.llm_model,
         messages=messages,
         temperature=settings.llm_temperature,
+        max_tokens=settings.llm_max_tokens,
         stream=True,
     )
     async for chunk in stream:

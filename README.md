@@ -193,7 +193,7 @@ uv run python scripts/build_index.py --rebuild
 uv run pytest
 ```
 
-54 个用例，分六类：
+55 个用例，分六类：
 
 - `tests/test_laws.py`：法规解析（条号、章节、领域标签）
 - `tests/test_api.py`：对话接口契约与 SSE 流式格式
