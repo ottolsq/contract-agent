@@ -187,15 +187,22 @@ uv run python scripts/build_index.py --rebuild
 
 索引写入 `data/chroma`（已 gitignore）。索引里记录了 embedding 模型名和维度，换模型后启动会直接报错提示重建，而不是静默召回错误结果。
 
+## 评测数据集
+
+`data/eval/eval_v1.jsonl`：30 条标注问题，劳动 / 商业 / 技术各 10 条。
+
+每条字段：`id / question / contract_type / expected_articles[] / note`。期望法条只依据 `data/processed/laws.jsonl` 原文标注；`tests/test_eval_dataset.py` 校验 30 条、领域分布、id 唯一和条号存在性。
+
 ## 测试
 
 ```bash
 uv run pytest
 ```
 
-55 个用例，分六类：
+58 个用例，分七类：
 
 - `tests/test_laws.py`：法规解析（条号、章节、领域标签）
+- `tests/test_eval_dataset.py`：评测集完整性（条数、分布、期望法条存在性）
 - `tests/test_api.py`：对话接口契约与 SSE 流式格式
 - `tests/test_resilience.py`：**故障注入 + 重试**——上游 429 / 超时 / 畸形响应 / 流式中途断开 / 缺 Key，验证不崩溃且不泄露上游细节；并验证 429 会自动重试、400 不会重试
 - `tests/test_prompts.py`：提示词构造——引用格式、空召回标记、长条文截断、数据块标签转义、注入内容只作为数据
