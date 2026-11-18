@@ -117,9 +117,15 @@ uv run python scripts/evaluate.py --mode retrieval
 
 # 召回率门禁
 uv run python scripts/evaluate.py --mode retrieval --fail-under 0.6
+
+# full 模式：生成答案 + L1 引用准确率
+uv run python scripts/evaluate.py --mode full
+
+# 加 oracle 诊断（额外 30 次调用）
+uv run python scripts/evaluate.py --mode full --oracle
 ```
 
-报告写入 `reports/<时间>-<数据集>.json`，包含 Recall micro/macro、MRR、排名分布和逐题明细；默认与同配置的上一份报告对比，`--no-compare` 可跳过。
+报告写入 `reports/<时间>-<数据集>.json`，包含 Recall micro/macro、MRR、排名分布和逐题明细；full 模式另含 `citation_l1` / `citation_coverage`，`--oracle` 另含 `oracle_hit_rate`。默认与同配置的上一份报告对比，`--no-compare` 可跳过；full 模式可加 `--fail-under-l1 0.9` 做引用门禁。
 
 ## 收录的法规
 
@@ -211,12 +217,13 @@ uv run python scripts/build_index.py --rebuild
 uv run pytest
 ```
 
-74 个用例，分九类：
+79 个用例，分十类：
 
 - `tests/test_laws.py`：法规解析（条号、章节、领域标签）
 - `tests/test_eval_dataset.py`：评测集完整性（条数、分布、期望法条存在性）
 - `tests/test_citations.py`：引用解析（中文/阿拉伯数字、一个法律名后多条、短名解析、无效/未解析条号、零引用）
 - `tests/test_evaluation.py`：召回率、最佳排名、分桶、摘要与报告对比
+- `tests/test_evaluate_full.py`：full 模式 L1、oracle 命中率、缺 Key、L1 门禁
 - `tests/test_api.py`：对话接口契约与 SSE 流式格式
 - `tests/test_resilience.py`：**故障注入 + 重试**——上游 429 / 超时 / 畸形响应 / 流式中途断开 / 缺 Key，验证不崩溃且不泄露上游细节；并验证 429 会自动重试、400 不会重试
 - `tests/test_prompts.py`：提示词构造——引用格式、空召回标记、长条文截断、数据块标签转义、注入内容只作为数据
