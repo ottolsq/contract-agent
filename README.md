@@ -38,7 +38,7 @@
 | 法条检索 | 向量检索 + 领域过滤，返回 top-k 法条 | 已完成（W2） |
 | 检索日志 | `trace_id` + 结构化日志，记录命中的法条与相似度 | 已完成（W2） |
 | 知识库问答 | 针对劳动 / 商业 / 技术法规提问，提示词约束必须标注法条依据 | 已完成（W2） |
-| 评测基线 | 30 条标注问题，检索召回率（含排名分布）+ 引用准确率 | W3 |
+| 评测基线 | 30 条标注问题，检索召回率（含排名分布）+ 引用准确率 L1 | 进行中（W3） |
 | 合同类型识别 | 判断对内 / 对外，选择 `labor + tech` 或 `civil + tech` 检索域 | W4 |
 | 条款拆分与风险判定 | 拆出主体、价款、交付、验收、IP、保密、数据、违约、解除等条款，逐条判风险 | W4 |
 | 审查报告 | 汇总风险清单、依据法条、整体结论 | W4 |
@@ -66,7 +66,7 @@
 - [x] W1：项目骨架、配置、流式对话接口、测试（20 个，含故障注入与重试）
 - [x] W1：三领域语料下载与清洗（18 部、1907 条）
 - [x] W2：向量入库、领域过滤、带引用问答、检索日志（`trace_id` + 命中法条）
-- [ ] W3：评测集与指标（排名分布 + oracle 测试）
+- [ ] W3：评测集与指标（进行中：数据集、L1 模块、检索基线已完成；full/oracle 待做）
 - [ ] W4：合同类型识别（含分类准确率）、条款拆分、LangGraph 审查工作流
 - [ ] W5：Streamlit 界面、多轮追问与 demo
 - [ ] W6：简历与面试材料
@@ -108,6 +108,18 @@ $json = @'
 curl.exe -N -X POST "http://127.0.0.1:8000/api/chat/stream" -H "Content-Type: application/json" --data-binary "@body.json"
 Remove-Item body.json
 ```
+
+## 评测
+
+```bash
+# 检索基线（不调 LLM，需先建索引）
+uv run python scripts/evaluate.py --mode retrieval
+
+# 召回率门禁
+uv run python scripts/evaluate.py --mode retrieval --fail-under 0.6
+```
+
+报告写入 `reports/<时间>-<数据集>.json`，包含 Recall micro/macro、MRR、排名分布和逐题明细；默认与同配置的上一份报告对比，`--no-compare` 可跳过。
 
 ## 收录的法规
 
@@ -199,11 +211,12 @@ uv run python scripts/build_index.py --rebuild
 uv run pytest
 ```
 
-68 个用例，分八类：
+74 个用例，分九类：
 
 - `tests/test_laws.py`：法规解析（条号、章节、领域标签）
 - `tests/test_eval_dataset.py`：评测集完整性（条数、分布、期望法条存在性）
 - `tests/test_citations.py`：引用解析（中文/阿拉伯数字、一个法律名后多条、短名解析、无效/未解析条号、零引用）
+- `tests/test_evaluation.py`：召回率、最佳排名、分桶、摘要与报告对比
 - `tests/test_api.py`：对话接口契约与 SSE 流式格式
 - `tests/test_resilience.py`：**故障注入 + 重试**——上游 429 / 超时 / 畸形响应 / 流式中途断开 / 缺 Key，验证不崩溃且不泄露上游细节；并验证 429 会自动重试、400 不会重试
 - `tests/test_prompts.py`：提示词构造——引用格式、空召回标记、长条文截断、数据块标签转义、注入内容只作为数据
@@ -220,6 +233,8 @@ contract-agent/
 │   ├── embeddings.py  # BGE 中文向量化（sentence-transformers）
 │   ├── vectorstore.py # Chroma 索引：写入与元数据过滤检索
 │   ├── retriever.py   # 检索入口：按合同类型选法域
+│   ├── citations.py   # 引用解析与 L1 校验
+│   ├── evaluation.py  # 召回率、排名分布与报告对比
 │   ├── prompts.py     # 带引用约束与注入防护的提示词
 │   ├── laws.py        # 法规 Markdown / DOCX 解析与领域划分
 │   ├── schemas.py     # 请求 / 响应模型
@@ -228,12 +243,15 @@ contract-agent/
 │   ├── import_official_laws.py # 官方 DOCX 导入（主路径）
 │   ├── fetch_laws.py           # 镜像下载（补充）
 │   ├── prepare_laws.py         # 镜像 Markdown 解析
-│   └── build_index.py          # 条文 JSONL → 向量索引
+│   ├── build_index.py          # 条文 JSONL → 向量索引
+│   └── evaluate.py             # 评测入口
 ├── tests/
 ├── data/
 │   ├── raw/           # 原始法规文件（不入库）
 │   ├── processed/     # 条文级 JSONL
+│   ├── eval/          # 评测标注集
 │   └── chroma/        # 向量索引（不入库，由 build_index.py 生成）
+├── reports/           # 评测报告（评测时生成，可入库对比）
 └── .env.example
 ```
 
