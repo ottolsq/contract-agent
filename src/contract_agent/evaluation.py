@@ -12,7 +12,14 @@ from .laws import Article
 from .vectorstore import Hit
 
 BUCKETS = ("1-3", "4-5", "6-10", "11-20", "未召回")
-CONFIG_KEYS = ("dataset", "mode", "top_k", "rank_depth", "embedding_model")
+CONFIG_KEYS = (
+    "dataset",
+    "mode",
+    "top_k",
+    "rank_depth",
+    "embedding_model",
+    "llm_model",
+)
 
 
 @dataclass(frozen=True)
@@ -38,8 +45,10 @@ class QuestionResult:
     bucket: str
     answer: str | None = None
     citation: dict | None = None
+    answer_error: str | None = None
     oracle_answer: str | None = None
     oracle_hit: bool | None = None
+    oracle_error: str | None = None
 
 
 def load_dataset(path: Path) -> list[EvalQuestion]:
@@ -113,7 +122,8 @@ def best_rank(hits: Sequence[Hit], expected: set[tuple[str, int]]) -> int | None
 
 
 def rank_bucket(rank: int | None, depth: int) -> str:
-    if rank is None or rank > depth:
+    # 五个桶只定义到 20；depth 更大时，20 名之后仍归入未召回，避免误标成 11-20
+    if rank is None or rank > depth or rank > 20:
         return "未召回"
     if rank <= 3:
         return "1-3"
@@ -172,8 +182,9 @@ def summarize(results: Sequence[QuestionResult]) -> dict:
         else (None if not citation_reports else 0.0)
     )
     citation_coverage = (
-        sum(1 for report in citation_reports if report.get("has_valid")) / total
-        if citation_reports and total
+        sum(1 for report in citation_reports if report.get("has_valid"))
+        / len(citation_reports)
+        if citation_reports
         else None
     )
 
@@ -185,6 +196,8 @@ def summarize(results: Sequence[QuestionResult]) -> dict:
         if oracle_values
         else None
     )
+    generation_errors = sum(1 for result in results if result.answer_error)
+    oracle_errors = sum(1 for result in results if result.oracle_error)
 
     return {
         "questions": total,
@@ -201,6 +214,8 @@ def summarize(results: Sequence[QuestionResult]) -> dict:
         "citation_l1": citation_l1,
         "citation_coverage": citation_coverage,
         "oracle_hit_rate": oracle_hit_rate,
+        "generation_errors": generation_errors,
+        "oracle_errors": oracle_errors,
         "ranking_distribution": {
             bucket: {
                 "count": counts.get(bucket, 0),

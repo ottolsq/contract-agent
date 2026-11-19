@@ -45,6 +45,10 @@ def test_best_rank_and_buckets():
     assert rank_bucket(21, 20) == "未召回"
 
 
+def test_rank_bucket_does_not_mislabel_beyond_20_when_depth_is_larger():
+    assert rank_bucket(21, 50) == "未召回"
+
+
 def test_build_result_uses_best_rank_and_top_k():
     question = EvalQuestion(
         id="q",
@@ -92,6 +96,57 @@ def test_summarize_micro_macro_and_distribution():
     assert metrics["ranking_distribution"]["1-3"]["count"] == 1
     assert metrics["ranking_distribution"]["6-10"]["count"] == 1
     assert metrics["ranking_distribution"]["未召回"]["count"] == 0
+
+
+def test_summarize_coverage_uses_answered_questions():
+    results = [
+        QuestionResult(
+            id="a",
+            question="",
+            contract_type="all",
+            expected=[],
+            retrieved=[],
+            hit_count=1,
+            expected_count=1,
+            recall=1.0,
+            best_rank=1,
+            bucket="1-3",
+            citation={"total": 1, "valid": 1, "has_valid": True},
+        ),
+        QuestionResult(
+            id="b",
+            question="",
+            contract_type="all",
+            expected=[],
+            retrieved=[],
+            hit_count=0,
+            expected_count=1,
+            recall=0.0,
+            best_rank=None,
+            bucket="未召回",
+        ),
+    ]
+    metrics = summarize(results)
+    assert metrics["citation_l1"] == 1.0
+    assert metrics["citation_coverage"] == 1.0
+    assert metrics["generation_errors"] == 0
+
+
+def test_compare_reports_refuses_different_models():
+    config = {
+        "dataset": "a",
+        "mode": "full",
+        "top_k": 5,
+        "rank_depth": 20,
+        "embedding_model": "m",
+        "llm_model": "deepseek-chat",
+    }
+    current = {"config": config, "metrics": {}}
+    previous = {
+        "config": {**config, "llm_model": "deepseek-flash"},
+        "metrics": {},
+    }
+    assert compare_reports(previous, current)["comparable"] is False
 
 
 def test_compare_reports_refuses_mismatched_config():

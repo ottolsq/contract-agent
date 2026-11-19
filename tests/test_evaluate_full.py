@@ -29,14 +29,26 @@ DATASET_ROW = {
     "expected_articles": [{"law": LAW, "article_no": 19}],
     "note": "test",
 }
+DATASET_ROW_2 = {
+    **DATASET_ROW,
+    "id": "labor-02",
+    "question": "试用期工资可以低于最低工资吗？",
+}
 
 
-def _write_fixtures(tmp_path: Path) -> tuple[Path, Path]:
+def _write_fixtures(
+    tmp_path: Path,
+    rows: list[dict] | None = None,
+) -> tuple[Path, Path]:
     corpus = tmp_path / "laws.jsonl"
     corpus.write_text(json.dumps(ARTICLE, ensure_ascii=False) + "\n", encoding="utf-8")
     dataset = tmp_path / "eval.jsonl"
     dataset.write_text(
-        json.dumps(DATASET_ROW, ensure_ascii=False) + "\n", encoding="utf-8"
+        "".join(
+            json.dumps(row, ensure_ascii=False) + "\n"
+            for row in (rows if rows is not None else [DATASET_ROW])
+        ),
+        encoding="utf-8",
     )
     return dataset, corpus
 
@@ -75,8 +87,9 @@ def _run(
     extra_args: tuple[str, ...] = (),
     stream=_fake_stream,
     settings: Settings | None = None,
-) -> tuple[int, dict]:
-    dataset, corpus = _write_fixtures(tmp_path)
+    dataset_rows: list[dict] | None = None,
+) -> tuple[int, dict | None]:
+    dataset, corpus = _write_fixtures(tmp_path, dataset_rows)
     monkeypatch.setattr(evaluate.retriever, "retrieve", _fake_retrieve)
     monkeypatch.setattr(evaluate.llm, "stream_chat", stream)
     monkeypatch.setattr(
@@ -97,7 +110,12 @@ def _run(
             *extra_args,
         ]
     )
-    report = json.loads(next(reports.glob("*.json")).read_text(encoding="utf-8"))
+    report_files = list(reports.glob("*.json"))
+    report = (
+        json.loads(report_files[0].read_text(encoding="utf-8"))
+        if report_files
+        else None
+    )
     return code, report
 
 
@@ -153,3 +171,29 @@ def test_l1_gate_fails_below_threshold(tmp_path, monkeypatch):
     )
 
     assert code == 1
+
+
+def test_generation_error_is_recorded_and_run_continues(tmp_path, monkeypatch):
+    calls: list[int] = []
+
+    async def flaky_stream(settings, messages):
+        calls.append(1)
+        if len(calls) == 1:
+            raise ConnectionError("transient")
+        yield "依据《中华人民共和国劳动合同法》第十九条，试用期最长六个月。"
+
+    code, report = _run(
+        tmp_path,
+        monkeypatch,
+        stream=flaky_stream,
+        dataset_rows=[DATASET_ROW, DATASET_ROW_2],
+    )
+
+    assert code == 0
+    assert report is not None
+    assert report["metrics"]["generation_errors"] == 1
+    assert report["metrics"]["citation_l1"] == 1.0
+    assert report["metrics"]["citation_coverage"] == 1.0
+    assert report["per_question"][0]["answer_error"].startswith("ConnectionError")
+    assert report["per_question"][1]["answer_error"] is None
+    assert report["per_question"][1]["citation"]["valid"] == 1

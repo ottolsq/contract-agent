@@ -88,6 +88,10 @@ def _print_summary(report: dict, report_path: Path) -> None:
         )
     if metrics.get("oracle_hit_rate") is not None:
         print(f"oracle：命中率 {metrics['oracle_hit_rate']:.1%}")
+    if metrics.get("generation_errors"):
+        print(f"生成失败：{metrics['generation_errors']} 题")
+    if metrics.get("oracle_errors"):
+        print(f"oracle 失败：{metrics['oracle_errors']} 题")
     print("排名分布：")
     for bucket, data in report["ranking_distribution"].items():
         print(f"  {bucket:<6} {data['count']:>3} 条  {data['ratio']:.1%}")
@@ -161,23 +165,33 @@ async def _fill_full_mode(
 ) -> None:
     for question, result in zip(questions, results):
         normal_hits = list(hits_by_id[question.id])[:top_k]
-        answer = await _generate(
-            settings,
-            build_messages(question.question, normal_hits, question.contract_type),
-        )
-        result.answer = answer
-        result.citation = _citation_dict(
-            validate_citations(answer, corpus_keys, aliases)
-        )
+        try:
+            answer = await _generate(
+                settings,
+                build_messages(question.question, normal_hits, question.contract_type),
+            )
+        except Exception as exc:
+            # 单题失败不拖垮整轮，报告里保留失败原因
+            result.answer_error = f"{type(exc).__name__}: {str(exc)[:200]}"
+        else:
+            result.answer = answer
+            result.citation = _citation_dict(
+                validate_citations(answer, corpus_keys, aliases)
+            )
 
         if not oracle:
             continue
 
         oracle_hits = [_article_hit(articles[key]) for key in question.expected]
-        oracle_answer = await _generate(
-            settings,
-            build_messages(question.question, oracle_hits, question.contract_type),
-        )
+        try:
+            oracle_answer = await _generate(
+                settings,
+                build_messages(question.question, oracle_hits, question.contract_type),
+            )
+        except Exception as exc:
+            result.oracle_error = f"{type(exc).__name__}: {str(exc)[:200]}"
+            continue
+
         oracle_report = validate_citations(oracle_answer, corpus_keys, aliases)
         expected = set(question.expected)
         result.oracle_answer = oracle_answer
