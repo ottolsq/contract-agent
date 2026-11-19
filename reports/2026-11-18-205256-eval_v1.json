@@ -1,0 +1,4348 @@
+{
+  "config": {
+    "dataset": "data\\eval\\eval_v1.jsonl",
+    "mode": "retrieval",
+    "embedding_model": "BAAI/bge-small-zh-v1.5",
+    "llm_model": "deepseek-flash",
+    "top_k": 5,
+    "rank_depth": 20,
+    "generated_at": "2026-11-18T20:52:56"
+  },
+  "metrics": {
+    "questions": 30,
+    "recall_micro": 0.6585365853658537,
+    "recall_macro": 0.6833333333333333,
+    "mrr": 0.6378451178451178,
+    "citation_l1": null,
+    "citation_coverage": null,
+    "oracle_hit_rate": null
+  },
+  "ranking_distribution": {
+    "1-3": {
+      "count": 21,
+      "ratio": 0.7
+    },
+    "4-5": {
+      "count": 2,
+      "ratio": 0.06666666666666667
+    },
+    "6-10": {
+      "count": 2,
+      "ratio": 0.06666666666666667
+    },
+    "11-20": {
+      "count": 1,
+      "ratio": 0.03333333333333333
+    },
+    "未召回": {
+      "count": 4,
+      "ratio": 0.13333333333333333
+    }
+  },
+  "per_question": [
+    {
+      "id": "labor-01",
+      "question": "公司与员工签三年期劳动合同，约定试用期九个月，是否合法？",
+      "contract_type": "internal",
+      "expected": [
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 19
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 21,
+          "rank": 1,
+          "similarity": 0.7697
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 19,
+          "rank": 2,
+          "similarity": 0.7455
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 83,
+          "rank": 3,
+          "similarity": 0.7071
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 70,
+          "rank": 4,
+          "similarity": 0.6933
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 21,
+          "rank": 5,
+          "similarity": 0.6925
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 19,
+          "rank": 6,
+          "similarity": 0.6625
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 18,
+          "rank": 7,
+          "similarity": 0.659
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 39,
+          "rank": 8,
+          "similarity": 0.6564
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 82,
+          "rank": 9,
+          "similarity": 0.6557
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 11,
+          "rank": 10,
+          "similarity": 0.655
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 37,
+          "rank": 11,
+          "similarity": 0.6541
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 6,
+          "rank": 12,
+          "similarity": 0.6527
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 25,
+          "rank": 13,
+          "similarity": 0.6463
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 11,
+          "rank": 14,
+          "similarity": 0.645
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 9,
+          "rank": 15,
+          "similarity": 0.6443
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 18,
+          "rank": 16,
+          "similarity": 0.6437
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 5,
+          "rank": 17,
+          "similarity": 0.6406
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 7,
+          "rank": 18,
+          "similarity": 0.6386
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 26,
+          "rank": 19,
+          "similarity": 0.6379
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 35,
+          "rank": 20,
+          "similarity": 0.6352
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 1,
+      "recall": 1.0,
+      "best_rank": 2,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "labor-02",
+      "question": "劳动合同约定员工离职后三年内不得从事同类业务，公司按月支付补偿，这个期限有效吗？",
+      "contract_type": "internal",
+      "expected": [
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 24
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 27,
+          "rank": 1,
+          "similarity": 0.7484
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 22,
+          "rank": 2,
+          "similarity": 0.74
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 46,
+          "rank": 3,
+          "similarity": 0.7314
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 6,
+          "rank": 4,
+          "similarity": 0.7296
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 5,
+          "rank": 5,
+          "similarity": 0.7249
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 82,
+          "rank": 6,
+          "similarity": 0.7243
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 28,
+          "rank": 7,
+          "similarity": 0.7237
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 21,
+          "rank": 8,
+          "similarity": 0.7225
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 25,
+          "rank": 9,
+          "similarity": 0.7211
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 26,
+          "rank": 10,
+          "similarity": 0.7187
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 40,
+          "rank": 11,
+          "similarity": 0.7171
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 20,
+          "rank": 12,
+          "similarity": 0.7166
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 91,
+          "rank": 13,
+          "similarity": 0.7165
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 19,
+          "rank": 14,
+          "similarity": 0.7137
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 18,
+          "rank": 15,
+          "similarity": 0.7134
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 19,
+          "rank": 16,
+          "similarity": 0.7133
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 11,
+          "rank": 17,
+          "similarity": 0.7105
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 97,
+          "rank": 18,
+          "similarity": 0.7083
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 17,
+          "rank": 19,
+          "similarity": 0.7076
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 83,
+          "rank": 20,
+          "similarity": 0.7054
+        }
+      ],
+      "hit_count": 0,
+      "expected_count": 1,
+      "recall": 0.0,
+      "best_rank": null,
+      "bucket": "未召回",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "labor-03",
+      "question": "公司安排员工法定节假日加班，加班工资应按什么标准支付？",
+      "contract_type": "internal",
+      "expected": [
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 44
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 31,
+          "rank": 1,
+          "similarity": 0.7284
+        },
+        {
+          "law": "关于工资总额组成的规定",
+          "article_no": 9,
+          "rank": 2,
+          "similarity": 0.709
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 85,
+          "rank": 3,
+          "similarity": 0.686
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 44,
+          "rank": 4,
+          "similarity": 0.6854
+        },
+        {
+          "law": "工资支付暂行规定",
+          "article_no": 7,
+          "rank": 5,
+          "similarity": 0.6852
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 51,
+          "rank": 6,
+          "similarity": 0.6775
+        },
+        {
+          "law": "工资支付暂行规定",
+          "article_no": 13,
+          "rank": 7,
+          "similarity": 0.6769
+        },
+        {
+          "law": "工资支付暂行规定",
+          "article_no": 11,
+          "rank": 8,
+          "similarity": 0.6683
+        },
+        {
+          "law": "关于工资总额组成的规定",
+          "article_no": 4,
+          "rank": 9,
+          "similarity": 0.6658
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 40,
+          "rank": 10,
+          "similarity": 0.6641
+        },
+        {
+          "law": "关于工资总额组成的规定",
+          "article_no": 10,
+          "rank": 11,
+          "similarity": 0.6443
+        },
+        {
+          "law": "保障农民工工资支付条例",
+          "article_no": 13,
+          "rank": 12,
+          "similarity": 0.6408
+        },
+        {
+          "law": "工资支付暂行规定",
+          "article_no": 1,
+          "rank": 13,
+          "similarity": 0.6286
+        },
+        {
+          "law": "保障农民工工资支付条例",
+          "article_no": 14,
+          "rank": 14,
+          "similarity": 0.6274
+        },
+        {
+          "law": "职工带薪年休假条例",
+          "article_no": 1,
+          "rank": 15,
+          "similarity": 0.6265
+        },
+        {
+          "law": "职工带薪年休假条例",
+          "article_no": 5,
+          "rank": 16,
+          "similarity": 0.6201
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 38,
+          "rank": 17,
+          "similarity": 0.6162
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 50,
+          "rank": 18,
+          "similarity": 0.6154
+        },
+        {
+          "law": "工资支付暂行规定",
+          "article_no": 3,
+          "rank": 19,
+          "similarity": 0.6153
+        },
+        {
+          "law": "保障农民工工资支付条例",
+          "article_no": 12,
+          "rank": 20,
+          "similarity": 0.6153
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 1,
+      "recall": 1.0,
+      "best_rank": 4,
+      "bucket": "4-5",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "labor-04",
+      "question": "员工入职两个月仍未签书面劳动合同，公司要承担什么责任？",
+      "contract_type": "internal",
+      "expected": [
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 10
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 82
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 11,
+          "rank": 1,
+          "similarity": 0.7214
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 82,
+          "rank": 2,
+          "similarity": 0.7207
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 6,
+          "rank": 3,
+          "similarity": 0.7149
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 7,
+          "rank": 4,
+          "similarity": 0.7145
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 5,
+          "rank": 5,
+          "similarity": 0.7142
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 10,
+          "rank": 6,
+          "similarity": 0.7079
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 90,
+          "rank": 7,
+          "similarity": 0.6943
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 19,
+          "rank": 8,
+          "similarity": 0.6942
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 25,
+          "rank": 9,
+          "similarity": 0.6885
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 89,
+          "rank": 10,
+          "similarity": 0.6884
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 81,
+          "rank": 11,
+          "similarity": 0.6882
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 34,
+          "rank": 12,
+          "similarity": 0.688
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 102,
+          "rank": 13,
+          "similarity": 0.6864
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 18,
+          "rank": 14,
+          "similarity": 0.6825
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 97,
+          "rank": 15,
+          "similarity": 0.678
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 56,
+          "rank": 16,
+          "similarity": 0.6682
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 40,
+          "rank": 17,
+          "similarity": 0.668
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 26,
+          "rank": 18,
+          "similarity": 0.668
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 36,
+          "rank": 19,
+          "similarity": 0.6675
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 34,
+          "rank": 20,
+          "similarity": 0.6666
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 2,
+      "recall": 0.5,
+      "best_rank": 2,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "labor-05",
+      "question": "公司因经营调整解除劳动合同，经济补偿按什么标准计算？",
+      "contract_type": "internal",
+      "expected": [
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 47
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 28,
+          "rank": 1,
+          "similarity": 0.7572
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 46,
+          "rank": 2,
+          "similarity": 0.738
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 87,
+          "rank": 3,
+          "similarity": 0.73
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 31,
+          "rank": 4,
+          "similarity": 0.7266
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 27,
+          "rank": 5,
+          "similarity": 0.7168
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 25,
+          "rank": 6,
+          "similarity": 0.7156
+        },
+        {
+          "law": "工资支付暂行规定",
+          "article_no": 16,
+          "rank": 7,
+          "similarity": 0.7135
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 24,
+          "rank": 8,
+          "similarity": 0.7012
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 47,
+          "rank": 9,
+          "similarity": 0.6834
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 22,
+          "rank": 10,
+          "similarity": 0.6717
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 102,
+          "rank": 11,
+          "similarity": 0.6716
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 36,
+          "rank": 12,
+          "similarity": 0.6668
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 91,
+          "rank": 13,
+          "similarity": 0.6562
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 10,
+          "rank": 14,
+          "similarity": 0.6537
+        },
+        {
+          "law": "劳动保障监察条例",
+          "article_no": 26,
+          "rank": 15,
+          "similarity": 0.653
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 97,
+          "rank": 16,
+          "similarity": 0.6463
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 90,
+          "rank": 17,
+          "similarity": 0.6455
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 99,
+          "rank": 18,
+          "similarity": 0.6388
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 32,
+          "rank": 19,
+          "similarity": 0.6344
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 89,
+          "rank": 20,
+          "similarity": 0.63
+        }
+      ],
+      "hit_count": 0,
+      "expected_count": 1,
+      "recall": 0.0,
+      "best_rank": 9,
+      "bucket": "6-10",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "labor-06",
+      "question": "公司违法解除劳动合同，员工可以要求多少赔偿金？",
+      "contract_type": "internal",
+      "expected": [
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 87
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 47
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 87,
+          "rank": 1,
+          "similarity": 0.7661
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 28,
+          "rank": 2,
+          "similarity": 0.7459
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 25,
+          "rank": 3,
+          "similarity": 0.7367
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 38,
+          "rank": 4,
+          "similarity": 0.7275
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 90,
+          "rank": 5,
+          "similarity": 0.7265
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 46,
+          "rank": 6,
+          "similarity": 0.7235
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 102,
+          "rank": 7,
+          "similarity": 0.7163
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 48,
+          "rank": 8,
+          "similarity": 0.71
+        },
+        {
+          "law": "工资支付暂行规定",
+          "article_no": 16,
+          "rank": 9,
+          "similarity": 0.7085
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 91,
+          "rank": 10,
+          "similarity": 0.7068
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 36,
+          "rank": 11,
+          "similarity": 0.7024
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 30,
+          "rank": 12,
+          "similarity": 0.7009
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 24,
+          "rank": 13,
+          "similarity": 0.6991
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 29,
+          "rank": 14,
+          "similarity": 0.698
+        },
+        {
+          "law": "工资支付暂行规定",
+          "article_no": 9,
+          "rank": 15,
+          "similarity": 0.6972
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 77,
+          "rank": 16,
+          "similarity": 0.6898
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 34,
+          "rank": 17,
+          "similarity": 0.6889
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 56,
+          "rank": 18,
+          "similarity": 0.6854
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 89,
+          "rank": 19,
+          "similarity": 0.685
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 31,
+          "rank": 20,
+          "similarity": 0.6846
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 2,
+      "recall": 0.5,
+      "best_rank": 1,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "labor-07",
+      "question": "员工累计工作满十二年，年休假有多少天？未休完怎么补偿？",
+      "contract_type": "internal",
+      "expected": [
+        {
+          "law": "职工带薪年休假条例",
+          "article_no": 3
+        },
+        {
+          "law": "职工带薪年休假条例",
+          "article_no": 5
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "职工带薪年休假条例",
+          "article_no": 3,
+          "rank": 1,
+          "similarity": 0.8022
+        },
+        {
+          "law": "职工带薪年休假条例",
+          "article_no": 4,
+          "rank": 2,
+          "similarity": 0.7283
+        },
+        {
+          "law": "职工带薪年休假条例",
+          "article_no": 5,
+          "rank": 3,
+          "similarity": 0.7116
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 45,
+          "rank": 4,
+          "similarity": 0.7067
+        },
+        {
+          "law": "职工带薪年休假条例",
+          "article_no": 2,
+          "rank": 5,
+          "similarity": 0.7029
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 9,
+          "rank": 6,
+          "similarity": 0.6953
+        },
+        {
+          "law": "职工带薪年休假条例",
+          "article_no": 7,
+          "rank": 7,
+          "similarity": 0.6878
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 38,
+          "rank": 8,
+          "similarity": 0.6875
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 44,
+          "rank": 9,
+          "similarity": 0.6728
+        },
+        {
+          "law": "劳动保障监察条例",
+          "article_no": 17,
+          "rank": 10,
+          "similarity": 0.6645
+        },
+        {
+          "law": "工资支付暂行规定",
+          "article_no": 11,
+          "rank": 11,
+          "similarity": 0.6565
+        },
+        {
+          "law": "职工带薪年休假条例",
+          "article_no": 1,
+          "rank": 12,
+          "similarity": 0.6558
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 7,
+          "rank": 13,
+          "similarity": 0.6537
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 6,
+          "rank": 14,
+          "similarity": 0.6515
+        },
+        {
+          "law": "工资支付暂行规定",
+          "article_no": 13,
+          "rank": 15,
+          "similarity": 0.6492
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 47,
+          "rank": 16,
+          "similarity": 0.648
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 40,
+          "rank": 17,
+          "similarity": 0.6364
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 51,
+          "rank": 18,
+          "similarity": 0.6364
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 41,
+          "rank": 19,
+          "similarity": 0.6363
+        },
+        {
+          "law": "中华人民共和国劳动合同法实施条例",
+          "article_no": 22,
+          "rank": 20,
+          "similarity": 0.6359
+        }
+      ],
+      "hit_count": 2,
+      "expected_count": 2,
+      "recall": 1.0,
+      "best_rank": 1,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "labor-08",
+      "question": "公司一直未给员工办理社保登记和缴费，违反了什么规定？",
+      "contract_type": "internal",
+      "expected": [
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 58
+        },
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 60
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "社会保险费征缴暂行条例",
+          "article_no": 23,
+          "rank": 1,
+          "similarity": 0.7231
+        },
+        {
+          "law": "社会保险费征缴暂行条例",
+          "article_no": 24,
+          "rank": 2,
+          "similarity": 0.7164
+        },
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 58,
+          "rank": 3,
+          "similarity": 0.7068
+        },
+        {
+          "law": "社会保险费征缴暂行条例",
+          "article_no": 13,
+          "rank": 4,
+          "similarity": 0.697
+        },
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 60,
+          "rank": 5,
+          "similarity": 0.6951
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 100,
+          "rank": 6,
+          "similarity": 0.6918
+        },
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 84,
+          "rank": 7,
+          "similarity": 0.6897
+        },
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 89,
+          "rank": 8,
+          "similarity": 0.6876
+        },
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 86,
+          "rank": 9,
+          "similarity": 0.6855
+        },
+        {
+          "law": "社会保险费征缴暂行条例",
+          "article_no": 26,
+          "rank": 10,
+          "similarity": 0.6819
+        },
+        {
+          "law": "劳动保障监察条例",
+          "article_no": 20,
+          "rank": 11,
+          "similarity": 0.6804
+        },
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 63,
+          "rank": 12,
+          "similarity": 0.6741
+        },
+        {
+          "law": "社会保险费征缴暂行条例",
+          "article_no": 7,
+          "rank": 13,
+          "similarity": 0.6705
+        },
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 91,
+          "rank": 14,
+          "similarity": 0.6683
+        },
+        {
+          "law": "社会保险费征缴暂行条例",
+          "article_no": 10,
+          "rank": 15,
+          "similarity": 0.665
+        },
+        {
+          "law": "社会保险费征缴暂行条例",
+          "article_no": 17,
+          "rank": 16,
+          "similarity": 0.6637
+        },
+        {
+          "law": "社会保险费征缴暂行条例",
+          "article_no": 9,
+          "rank": 17,
+          "similarity": 0.663
+        },
+        {
+          "law": "社会保险费征缴暂行条例",
+          "article_no": 27,
+          "rank": 18,
+          "similarity": 0.6599
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 11,
+          "rank": 19,
+          "similarity": 0.6563
+        },
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 82,
+          "rank": 20,
+          "similarity": 0.6505
+        }
+      ],
+      "hit_count": 2,
+      "expected_count": 2,
+      "recall": 1.0,
+      "best_rank": 3,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "labor-09",
+      "question": "员工在上下班途中发生非本人主要责任的交通事故，能否认定为工伤？",
+      "contract_type": "internal",
+      "expected": [
+        {
+          "law": "工伤保险条例",
+          "article_no": 14
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "工伤保险条例",
+          "article_no": 14,
+          "rank": 1,
+          "similarity": 0.7768
+        },
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 37,
+          "rank": 2,
+          "similarity": 0.7184
+        },
+        {
+          "law": "工伤保险条例",
+          "article_no": 16,
+          "rank": 3,
+          "similarity": 0.7135
+        },
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 36,
+          "rank": 4,
+          "similarity": 0.6863
+        },
+        {
+          "law": "工伤保险条例",
+          "article_no": 21,
+          "rank": 5,
+          "similarity": 0.6784
+        },
+        {
+          "law": "工伤保险条例",
+          "article_no": 15,
+          "rank": 6,
+          "similarity": 0.6704
+        },
+        {
+          "law": "工伤保险条例",
+          "article_no": 19,
+          "rank": 7,
+          "similarity": 0.6688
+        },
+        {
+          "law": "工伤保险条例",
+          "article_no": 57,
+          "rank": 8,
+          "similarity": 0.6644
+        },
+        {
+          "law": "工伤保险条例",
+          "article_no": 58,
+          "rank": 9,
+          "similarity": 0.6635
+        },
+        {
+          "law": "工伤保险条例",
+          "article_no": 17,
+          "rank": 10,
+          "similarity": 0.6632
+        },
+        {
+          "law": "工伤保险条例",
+          "article_no": 67,
+          "rank": 11,
+          "similarity": 0.6466
+        },
+        {
+          "law": "工伤保险条例",
+          "article_no": 20,
+          "rank": 12,
+          "similarity": 0.6409
+        },
+        {
+          "law": "工伤保险条例",
+          "article_no": 4,
+          "rank": 13,
+          "similarity": 0.6362
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 29,
+          "rank": 14,
+          "similarity": 0.6348
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 93,
+          "rank": 15,
+          "similarity": 0.6327
+        },
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 33,
+          "rank": 16,
+          "similarity": 0.6289
+        },
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 43,
+          "rank": 17,
+          "similarity": 0.6247
+        },
+        {
+          "law": "工伤保险条例",
+          "article_no": 42,
+          "rank": 18,
+          "similarity": 0.6221
+        },
+        {
+          "law": "工伤保险条例",
+          "article_no": 41,
+          "rank": 19,
+          "similarity": 0.6217
+        },
+        {
+          "law": "工伤保险条例",
+          "article_no": 45,
+          "rank": 20,
+          "similarity": 0.6203
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 1,
+      "recall": 1.0,
+      "best_rank": 1,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "labor-10",
+      "question": "女职工生育可以享受多少天产假？难产如何增加？",
+      "contract_type": "internal",
+      "expected": [
+        {
+          "law": "女职工劳动保护特别规定",
+          "article_no": 7
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "女职工劳动保护特别规定",
+          "article_no": 7,
+          "rank": 1,
+          "similarity": 0.8626
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 62,
+          "rank": 2,
+          "similarity": 0.8306
+        },
+        {
+          "law": "女职工劳动保护特别规定",
+          "article_no": 8,
+          "rank": 3,
+          "similarity": 0.7125
+        },
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 56,
+          "rank": 4,
+          "similarity": 0.7079
+        },
+        {
+          "law": "女职工劳动保护特别规定",
+          "article_no": 10,
+          "rank": 5,
+          "similarity": 0.6379
+        },
+        {
+          "law": "女职工劳动保护特别规定",
+          "article_no": 9,
+          "rank": 6,
+          "similarity": 0.621
+        },
+        {
+          "law": "女职工劳动保护特别规定",
+          "article_no": 6,
+          "rank": 7,
+          "similarity": 0.6126
+        },
+        {
+          "law": "职工带薪年休假条例",
+          "article_no": 4,
+          "rank": 8,
+          "similarity": 0.6078
+        },
+        {
+          "law": "女职工劳动保护特别规定",
+          "article_no": 1,
+          "rank": 9,
+          "similarity": 0.6047
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 61,
+          "rank": 10,
+          "similarity": 0.602
+        },
+        {
+          "law": "职工带薪年休假条例",
+          "article_no": 3,
+          "rank": 11,
+          "similarity": 0.5995
+        },
+        {
+          "law": "职工带薪年休假条例",
+          "article_no": 5,
+          "rank": 12,
+          "similarity": 0.5981
+        },
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 53,
+          "rank": 13,
+          "similarity": 0.5873
+        },
+        {
+          "law": "劳动保障监察条例",
+          "article_no": 23,
+          "rank": 14,
+          "similarity": 0.5848
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 45,
+          "rank": 15,
+          "similarity": 0.5786
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 39,
+          "rank": 16,
+          "similarity": 0.5719
+        },
+        {
+          "law": "女职工劳动保护特别规定",
+          "article_no": 3,
+          "rank": 17,
+          "similarity": 0.5709
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 41,
+          "rank": 18,
+          "similarity": 0.5649
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 63,
+          "rank": 19,
+          "similarity": 0.5639
+        },
+        {
+          "law": "职工带薪年休假条例",
+          "article_no": 2,
+          "rank": 20,
+          "similarity": 0.5584
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 1,
+      "recall": 1.0,
+      "best_rank": 1,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "civil-01",
+      "question": "采购合同约定的违约金明显高于实际损失，违约方可以请求调整吗？",
+      "contract_type": "external",
+      "expected": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 585
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 585,
+          "rank": 1,
+          "similarity": 0.7607
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 588,
+          "rank": 2,
+          "similarity": 0.7444
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 591,
+          "rank": 3,
+          "similarity": 0.7407
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 582,
+          "rank": 4,
+          "similarity": 0.7164
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 592,
+          "rank": 5,
+          "similarity": 0.6974
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 584,
+          "rank": 6,
+          "similarity": 0.6972
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 543,
+          "rank": 7,
+          "similarity": 0.6595
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 511,
+          "rank": 8,
+          "similarity": 0.6588
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 611,
+          "rank": 9,
+          "similarity": 0.6582
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 510,
+          "rank": 10,
+          "similarity": 0.6563
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 580,
+          "rank": 11,
+          "similarity": 0.6515
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 186,
+          "rank": 12,
+          "similarity": 0.6514
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 617,
+          "rank": 13,
+          "similarity": 0.6503
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 781,
+          "rank": 14,
+          "similarity": 0.6487
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 533,
+          "rank": 15,
+          "similarity": 0.648
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 605,
+          "rank": 16,
+          "similarity": 0.6469
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 489,
+          "rank": 17,
+          "similarity": 0.6467
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 478,
+          "rank": 18,
+          "similarity": 0.6465
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 488,
+          "rank": 19,
+          "similarity": 0.6433
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 544,
+          "rank": 20,
+          "similarity": 0.643
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 1,
+      "recall": 1.0,
+      "best_rank": 1,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "civil-02",
+      "question": "买卖合同约定定金为合同金额的百分之三十，超过部分是否有效？适用什么罚则？",
+      "contract_type": "external",
+      "expected": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 586
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 587
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 646,
+          "rank": 1,
+          "similarity": 0.7187
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 626,
+          "rank": 2,
+          "similarity": 0.7153
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 617,
+          "rank": 3,
+          "similarity": 0.7087
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 588,
+          "rank": 4,
+          "similarity": 0.7012
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 585,
+          "rank": 5,
+          "similarity": 0.6948
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 637,
+          "rank": 6,
+          "similarity": 0.6893
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 602,
+          "rank": 7,
+          "similarity": 0.681
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 608,
+          "rank": 8,
+          "similarity": 0.6804
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 505,
+          "rank": 9,
+          "similarity": 0.6784
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 833,
+          "rank": 10,
+          "similarity": 0.6781
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 586,
+          "rank": 11,
+          "similarity": 0.6774
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 605,
+          "rank": 12,
+          "similarity": 0.6756
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 582,
+          "rank": 13,
+          "similarity": 0.6743
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 639,
+          "rank": 14,
+          "similarity": 0.6735
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 628,
+          "rank": 15,
+          "similarity": 0.6647
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 642,
+          "rank": 16,
+          "similarity": 0.6638
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 587,
+          "rank": 17,
+          "similarity": 0.6629
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 627,
+          "rank": 18,
+          "similarity": 0.6571
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 470,
+          "rank": 19,
+          "similarity": 0.6561
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 584,
+          "rank": 20,
+          "similarity": 0.656
+        }
+      ],
+      "hit_count": 0,
+      "expected_count": 2,
+      "recall": 0.0,
+      "best_rank": 11,
+      "bucket": "11-20",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "civil-03",
+      "question": "货物交付给买方后发生毁损，风险由谁承担？",
+      "contract_type": "external",
+      "expected": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 604
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 604,
+          "rank": 1,
+          "similarity": 0.8154
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 607,
+          "rank": 2,
+          "similarity": 0.773
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 606,
+          "rank": 3,
+          "similarity": 0.7696
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 605,
+          "rank": 4,
+          "similarity": 0.7401
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 640,
+          "rank": 5,
+          "similarity": 0.7237
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 611,
+          "rank": 6,
+          "similarity": 0.7233
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 608,
+          "rank": 7,
+          "similarity": 0.7067
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 832,
+          "rank": 8,
+          "similarity": 0.7037
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 833,
+          "rank": 9,
+          "similarity": 0.6852
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 573,
+          "rank": 10,
+          "similarity": 0.6795
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 186,
+          "rank": 11,
+          "similarity": 0.6675
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 784,
+          "rank": 12,
+          "similarity": 0.6637
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 756,
+          "rank": 13,
+          "similarity": 0.6492
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 714,
+          "rank": 14,
+          "similarity": 0.6439
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 592,
+          "rank": 15,
+          "similarity": 0.6435
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 609,
+          "rank": 16,
+          "similarity": 0.6427
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 618,
+          "rank": 17,
+          "similarity": 0.6413
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 917,
+          "rank": 18,
+          "similarity": 0.6409
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 500,
+          "rank": 19,
+          "similarity": 0.6406
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 824,
+          "rank": 20,
+          "similarity": 0.6386
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 1,
+      "recall": 1.0,
+      "best_rank": 1,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "civil-04",
+      "question": "因不可抗力导致合同无法履行，能否免除违约责任？需要做什么？",
+      "contract_type": "external",
+      "expected": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 590
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 590,
+          "rank": 1,
+          "similarity": 0.8268
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 582,
+          "rank": 2,
+          "similarity": 0.7535
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 180,
+          "rank": 3,
+          "similarity": 0.7452
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 563,
+          "rank": 4,
+          "similarity": 0.7415
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 577,
+          "rank": 5,
+          "similarity": 0.7404
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 592,
+          "rank": 6,
+          "similarity": 0.7303
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 584,
+          "rank": 7,
+          "similarity": 0.7118
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 580,
+          "rank": 8,
+          "similarity": 0.708
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 523,
+          "rank": 9,
+          "similarity": 0.7057
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 581,
+          "rank": 10,
+          "similarity": 0.7035
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 578,
+          "rank": 11,
+          "similarity": 0.7005
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 566,
+          "rank": 12,
+          "similarity": 0.6992
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 583,
+          "rank": 13,
+          "similarity": 0.6954
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 533,
+          "rank": 14,
+          "similarity": 0.695
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 528,
+          "rank": 15,
+          "similarity": 0.6936
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 186,
+          "rank": 16,
+          "similarity": 0.6925
+        },
+        {
+          "law": "中华人民共和国著作权法",
+          "article_no": 61,
+          "rank": 17,
+          "similarity": 0.6917
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 522,
+          "rank": 18,
+          "similarity": 0.6896
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 506,
+          "rank": 19,
+          "similarity": 0.688
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 591,
+          "rank": 20,
+          "similarity": 0.685
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 1,
+      "recall": 1.0,
+      "best_rank": 1,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "civil-05",
+      "question": "保证合同没有约定保证方式和保证期间，保证人承担什么责任、期间多长？",
+      "contract_type": "external",
+      "expected": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 686
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 692
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 686,
+          "rank": 1,
+          "similarity": 0.8454
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 692,
+          "rank": 2,
+          "similarity": 0.8143
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 681,
+          "rank": 3,
+          "similarity": 0.8033
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 699,
+          "rank": 4,
+          "similarity": 0.7981
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 693,
+          "rank": 5,
+          "similarity": 0.7833
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 684,
+          "rank": 6,
+          "similarity": 0.7805
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 688,
+          "rank": 7,
+          "similarity": 0.7783
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 690,
+          "rank": 8,
+          "similarity": 0.7679
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 685,
+          "rank": 9,
+          "similarity": 0.7577
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 682,
+          "rank": 10,
+          "similarity": 0.7533
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 687,
+          "rank": 11,
+          "similarity": 0.7505
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 698,
+          "rank": 12,
+          "similarity": 0.7503
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 694,
+          "rank": 13,
+          "similarity": 0.7485
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 700,
+          "rank": 14,
+          "similarity": 0.7414
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 691,
+          "rank": 15,
+          "similarity": 0.7383
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 695,
+          "rank": 16,
+          "similarity": 0.7228
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 697,
+          "rank": 17,
+          "similarity": 0.7132
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 696,
+          "rank": 18,
+          "similarity": 0.7085
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 902,
+          "rank": 19,
+          "similarity": 0.6821
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 392,
+          "rank": 20,
+          "similarity": 0.6821
+        }
+      ],
+      "hit_count": 2,
+      "expected_count": 2,
+      "recall": 1.0,
+      "best_rank": 1,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "civil-06",
+      "question": "供应商提供的格式合同中免责条款没有提示说明，买方可以主张什么？",
+      "contract_type": "external",
+      "expected": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 496
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 496,
+          "rank": 1,
+          "similarity": 0.7216
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 511,
+          "rank": 2,
+          "similarity": 0.6834
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 639,
+          "rank": 3,
+          "similarity": 0.6818
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 613,
+          "rank": 4,
+          "similarity": 0.677
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 808,
+          "rank": 5,
+          "similarity": 0.6674
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 641,
+          "rank": 6,
+          "similarity": 0.6671
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 510,
+          "rank": 7,
+          "similarity": 0.6613
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 610,
+          "rank": 8,
+          "similarity": 0.6555
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 626,
+          "rank": 9,
+          "similarity": 0.6506
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 685,
+          "rank": 10,
+          "similarity": 0.6502
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 918,
+          "rank": 11,
+          "similarity": 0.6499
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 628,
+          "rank": 12,
+          "similarity": 0.6488
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 619,
+          "rank": 13,
+          "similarity": 0.6472
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 602,
+          "rank": 14,
+          "similarity": 0.6464
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 617,
+          "rank": 15,
+          "similarity": 0.6444
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 578,
+          "rank": 16,
+          "similarity": 0.6344
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 580,
+          "rank": 17,
+          "similarity": 0.6341
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 506,
+          "rank": 18,
+          "similarity": 0.6324
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 621,
+          "rank": 19,
+          "similarity": 0.632
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 960,
+          "rank": 20,
+          "similarity": 0.6317
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 1,
+      "recall": 1.0,
+      "best_rank": 1,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "civil-07",
+      "question": "对方迟延履行主要债务，经催告后仍不履行，能否解除合同？",
+      "contract_type": "external",
+      "expected": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 563
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 563,
+          "rank": 1,
+          "similarity": 0.816
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 566,
+          "rank": 2,
+          "similarity": 0.7571
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 528,
+          "rank": 3,
+          "similarity": 0.732
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 565,
+          "rank": 4,
+          "similarity": 0.7236
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 580,
+          "rank": 5,
+          "similarity": 0.7149
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 557,
+          "rank": 6,
+          "similarity": 0.7124
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 526,
+          "rank": 7,
+          "similarity": 0.7096
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 525,
+          "rank": 8,
+          "similarity": 0.7093
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 778,
+          "rank": 9,
+          "similarity": 0.7014
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 590,
+          "rank": 10,
+          "similarity": 0.6996
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 581,
+          "rank": 11,
+          "similarity": 0.6871
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 527,
+          "rank": 12,
+          "similarity": 0.6869
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 806,
+          "rank": 13,
+          "similarity": 0.6868
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 567,
+          "rank": 14,
+          "similarity": 0.6771
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 538,
+          "rank": 15,
+          "similarity": 0.6754
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 564,
+          "rank": 16,
+          "similarity": 0.6717
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 578,
+          "rank": 17,
+          "similarity": 0.6679
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 687,
+          "rank": 18,
+          "similarity": 0.6671
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 529,
+          "rank": 19,
+          "similarity": 0.6657
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 589,
+          "rank": 20,
+          "similarity": 0.6625
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 1,
+      "recall": 1.0,
+      "best_rank": 1,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "civil-08",
+      "question": "一方违约造成对方损失，赔偿范围包括哪些？能否包括可得利益？",
+      "contract_type": "external",
+      "expected": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 584
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 577
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 591,
+          "rank": 1,
+          "similarity": 0.7991
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 584,
+          "rank": 2,
+          "similarity": 0.7745
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 585,
+          "rank": 3,
+          "similarity": 0.773
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 588,
+          "rank": 4,
+          "similarity": 0.7682
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 186,
+          "rank": 5,
+          "similarity": 0.7639
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 592,
+          "rank": 6,
+          "similarity": 0.7576
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 582,
+          "rank": 7,
+          "similarity": 0.7369
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 593,
+          "rank": 8,
+          "similarity": 0.715
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 691,
+          "rank": 9,
+          "similarity": 0.7117
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 583,
+          "rank": 10,
+          "similarity": 0.7101
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 577,
+          "rank": 11,
+          "similarity": 0.7026
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 500,
+          "rank": 12,
+          "similarity": 0.7
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 873,
+          "rank": 13,
+          "similarity": 0.6997
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 872,
+          "rank": 14,
+          "similarity": 0.6858
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 179,
+          "rank": 15,
+          "similarity": 0.6747
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 580,
+          "rank": 16,
+          "similarity": 0.672
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 929,
+          "rank": 17,
+          "similarity": 0.6701
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 833,
+          "rank": 18,
+          "similarity": 0.6678
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 801,
+          "rank": 19,
+          "similarity": 0.6656
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 458,
+          "rank": 20,
+          "similarity": 0.6602
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 2,
+      "recall": 0.5,
+      "best_rank": 2,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "civil-09",
+      "question": "合同欠款纠纷的诉讼时效是几年？从什么时候起算？",
+      "contract_type": "external",
+      "expected": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 188
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 189,
+          "rank": 1,
+          "similarity": 0.7403
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 594,
+          "rank": 2,
+          "similarity": 0.714
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 195,
+          "rank": 3,
+          "similarity": 0.6943
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 188,
+          "rank": 4,
+          "similarity": 0.6786
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 194,
+          "rank": 5,
+          "similarity": 0.664
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 190,
+          "rank": 6,
+          "similarity": 0.6495
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 201,
+          "rank": 7,
+          "similarity": 0.6465
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 694,
+          "rank": 8,
+          "similarity": 0.6459
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 197,
+          "rank": 9,
+          "similarity": 0.6428
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 565,
+          "rank": 10,
+          "similarity": 0.6421
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 200,
+          "rank": 11,
+          "similarity": 0.637
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 191,
+          "rank": 12,
+          "similarity": 0.6299
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 563,
+          "rank": 13,
+          "similarity": 0.6272
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 674,
+          "rank": 14,
+          "similarity": 0.6256
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 533,
+          "rank": 15,
+          "similarity": 0.6209
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 502,
+          "rank": 16,
+          "similarity": 0.616
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 198,
+          "rank": 17,
+          "similarity": 0.6127
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 567,
+          "rank": 18,
+          "similarity": 0.5998
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 505,
+          "rank": 19,
+          "similarity": 0.5997
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 199,
+          "rank": 20,
+          "similarity": 0.5986
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 1,
+      "recall": 1.0,
+      "best_rank": 4,
+      "bucket": "4-5",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "civil-10",
+      "question": "业务员超越授权对外签约，合同对公司是否有效？相对人如何保护自己？",
+      "contract_type": "external",
+      "expected": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 171
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 172
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 505,
+          "rank": 1,
+          "similarity": 0.6849
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 509,
+          "rank": 2,
+          "similarity": 0.6565
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 119,
+          "rank": 3,
+          "similarity": 0.646
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 543,
+          "rank": 4,
+          "similarity": 0.6429
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 215,
+          "rank": 5,
+          "similarity": 0.6397
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 504,
+          "rank": 6,
+          "similarity": 0.6388
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 592,
+          "rank": 7,
+          "similarity": 0.6386
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 465,
+          "rank": 8,
+          "similarity": 0.6323
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 510,
+          "rank": 9,
+          "similarity": 0.6312
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 471,
+          "rank": 10,
+          "similarity": 0.6293
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 533,
+          "rank": 11,
+          "similarity": 0.6258
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 483,
+          "rank": 12,
+          "similarity": 0.6226
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 890,
+          "rank": 13,
+          "similarity": 0.6204
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 883,
+          "rank": 14,
+          "similarity": 0.6199
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 578,
+          "rank": 15,
+          "similarity": 0.6115
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 489,
+          "rank": 16,
+          "similarity": 0.6106
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 501,
+          "rank": 17,
+          "similarity": 0.6097
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 682,
+          "rank": 18,
+          "similarity": 0.6083
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 186,
+          "rank": 19,
+          "similarity": 0.6081
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 873,
+          "rank": 20,
+          "similarity": 0.6054
+        }
+      ],
+      "hit_count": 0,
+      "expected_count": 2,
+      "recall": 0.0,
+      "best_rank": null,
+      "bucket": "未召回",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "tech-01",
+      "question": "公司收集员工指纹和健康信息，是否需要单独同意？",
+      "contract_type": "internal",
+      "expected": [
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 29
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 54,
+          "rank": 1,
+          "similarity": 0.5697
+        },
+        {
+          "law": "中华人民共和国反不正当竞争法",
+          "article_no": 37,
+          "rank": 2,
+          "similarity": 0.5522
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 38,
+          "rank": 3,
+          "similarity": 0.5518
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 22,
+          "rank": 4,
+          "similarity": 0.5467
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 25,
+          "rank": 5,
+          "similarity": 0.5444
+        },
+        {
+          "law": "中华人民共和国反不正当竞争法",
+          "article_no": 19,
+          "rank": 6,
+          "similarity": 0.5436
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 47,
+          "rank": 7,
+          "similarity": 0.5432
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 52,
+          "rank": 8,
+          "similarity": 0.5413
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 26,
+          "rank": 9,
+          "similarity": 0.539
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 13,
+          "rank": 10,
+          "similarity": 0.5388
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 23,
+          "rank": 11,
+          "similarity": 0.5387
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 10,
+          "rank": 12,
+          "similarity": 0.5379
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 14,
+          "rank": 13,
+          "similarity": 0.5367
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 10,
+          "rank": 14,
+          "similarity": 0.5315
+        },
+        {
+          "law": "中华人民共和国社会保险法",
+          "article_no": 81,
+          "rank": 15,
+          "similarity": 0.5309
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 38,
+          "rank": 16,
+          "similarity": 0.5292
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 65,
+          "rank": 17,
+          "similarity": 0.5264
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 18,
+          "rank": 18,
+          "similarity": 0.5264
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 33,
+          "rank": 19,
+          "similarity": 0.5262
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 46,
+          "rank": 20,
+          "similarity": 0.5255
+        }
+      ],
+      "hit_count": 0,
+      "expected_count": 1,
+      "recall": 0.0,
+      "best_rank": null,
+      "bucket": "未召回",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "tech-02",
+      "question": "员工离职后要求删除个人信息，公司在什么情况下必须删除？",
+      "contract_type": "internal",
+      "expected": [
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 47
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 47,
+          "rank": 1,
+          "similarity": 0.718
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 16,
+          "rank": 2,
+          "similarity": 0.6479
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 15,
+          "rank": 3,
+          "similarity": 0.6231
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 25,
+          "rank": 4,
+          "similarity": 0.6223
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 27,
+          "rank": 5,
+          "similarity": 0.6218
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 22,
+          "rank": 6,
+          "similarity": 0.6162
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 18,
+          "rank": 7,
+          "similarity": 0.6093
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 32,
+          "rank": 8,
+          "similarity": 0.6082
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 45,
+          "rank": 9,
+          "similarity": 0.6027
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 21,
+          "rank": 10,
+          "similarity": 0.598
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 13,
+          "rank": 11,
+          "similarity": 0.5965
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 45,
+          "rank": 12,
+          "similarity": 0.5937
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 55,
+          "rank": 13,
+          "similarity": 0.5916
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 4,
+          "rank": 14,
+          "similarity": 0.5884
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 24,
+          "rank": 15,
+          "similarity": 0.5883
+        },
+        {
+          "law": "中华人民共和国劳动法",
+          "article_no": 26,
+          "rank": 16,
+          "similarity": 0.5868
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 44,
+          "rank": 17,
+          "similarity": 0.5859
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 42,
+          "rank": 18,
+          "similarity": 0.5838
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 57,
+          "rank": 19,
+          "similarity": 0.5799
+        },
+        {
+          "law": "工资支付暂行规定",
+          "article_no": 9,
+          "rank": 20,
+          "similarity": 0.5784
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 1,
+      "recall": 1.0,
+      "best_rank": 1,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "tech-03",
+      "question": "公司把员工个人信息传输给境外总部，需要满足哪些条件并告知什么？",
+      "contract_type": "internal",
+      "expected": [
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 38
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 39
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 38,
+          "rank": 1,
+          "similarity": 0.7011
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 39,
+          "rank": 2,
+          "similarity": 0.6892
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 39,
+          "rank": 3,
+          "similarity": 0.6809
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 41,
+          "rank": 4,
+          "similarity": 0.6752
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 40,
+          "rank": 5,
+          "similarity": 0.6706
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 53,
+          "rank": 6,
+          "similarity": 0.6637
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 36,
+          "rank": 7,
+          "similarity": 0.6623
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 42,
+          "rank": 8,
+          "similarity": 0.644
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 71,
+          "rank": 9,
+          "similarity": 0.6254
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 63,
+          "rank": 10,
+          "similarity": 0.6192
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 7,
+          "rank": 11,
+          "similarity": 0.6184
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 52,
+          "rank": 12,
+          "similarity": 0.6178
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 55,
+          "rank": 13,
+          "similarity": 0.6159
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 35,
+          "rank": 14,
+          "similarity": 0.6127
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 58,
+          "rank": 15,
+          "similarity": 0.6122
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 12,
+          "rank": 16,
+          "similarity": 0.6106
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 65,
+          "rank": 17,
+          "similarity": 0.6071
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 62,
+          "rank": 18,
+          "similarity": 0.607
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 36,
+          "rank": 19,
+          "similarity": 0.6054
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 13,
+          "rank": 20,
+          "similarity": 0.6003
+        }
+      ],
+      "hit_count": 2,
+      "expected_count": 2,
+      "recall": 1.0,
+      "best_rank": 1,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "tech-04",
+      "question": "公司在员工手册中收集个人信息用于人力资源管理，需要履行哪些告知义务？",
+      "contract_type": "internal",
+      "expected": [
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 17
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 13,
+          "rank": 1,
+          "similarity": 0.6973
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 7,
+          "rank": 2,
+          "similarity": 0.6892
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 6,
+          "rank": 3,
+          "similarity": 0.6851
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 39,
+          "rank": 4,
+          "similarity": 0.6819
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 37,
+          "rank": 5,
+          "similarity": 0.6732
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 38,
+          "rank": 6,
+          "similarity": 0.6639
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 63,
+          "rank": 7,
+          "similarity": 0.6626
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 18,
+          "rank": 8,
+          "similarity": 0.6595
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 55,
+          "rank": 9,
+          "similarity": 0.6552
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 17,
+          "rank": 10,
+          "similarity": 0.6542
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 35,
+          "rank": 11,
+          "similarity": 0.6527
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 48,
+          "rank": 12,
+          "similarity": 0.6446
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 58,
+          "rank": 13,
+          "similarity": 0.6437
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 23,
+          "rank": 14,
+          "similarity": 0.6435
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 10,
+          "rank": 15,
+          "similarity": 0.6434
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 51,
+          "rank": 16,
+          "similarity": 0.6414
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 38,
+          "rank": 17,
+          "similarity": 0.6385
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 5,
+          "rank": 18,
+          "similarity": 0.6377
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 59,
+          "rank": 19,
+          "similarity": 0.6337
+        },
+        {
+          "law": "中华人民共和国劳动合同法",
+          "article_no": 8,
+          "rank": 20,
+          "similarity": 0.6327
+        }
+      ],
+      "hit_count": 0,
+      "expected_count": 1,
+      "recall": 0.0,
+      "best_rank": 10,
+      "bucket": "6-10",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "tech-05",
+      "question": "处理员工体检报告中的敏感个人信息，同意规则是什么？",
+      "contract_type": "internal",
+      "expected": [
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 29
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 14
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 29,
+          "rank": 1,
+          "similarity": 0.7291
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 30,
+          "rank": 2,
+          "similarity": 0.693
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 55,
+          "rank": 3,
+          "similarity": 0.6542
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 32,
+          "rank": 4,
+          "similarity": 0.6503
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 7,
+          "rank": 5,
+          "similarity": 0.6381
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 48,
+          "rank": 6,
+          "similarity": 0.635
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 13,
+          "rank": 7,
+          "similarity": 0.6345
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 28,
+          "rank": 8,
+          "similarity": 0.6342
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 18,
+          "rank": 9,
+          "similarity": 0.6217
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 5,
+          "rank": 10,
+          "similarity": 0.612
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 8,
+          "rank": 11,
+          "similarity": 0.612
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 14,
+          "rank": 12,
+          "similarity": 0.6045
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 70,
+          "rank": 13,
+          "similarity": 0.6031
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 54,
+          "rank": 14,
+          "similarity": 0.6014
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 6,
+          "rank": 15,
+          "similarity": 0.5994
+        },
+        {
+          "law": "中华人民共和国反不正当竞争法",
+          "article_no": 37,
+          "rank": 16,
+          "similarity": 0.5982
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 64,
+          "rank": 17,
+          "similarity": 0.5953
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 12,
+          "rank": 18,
+          "similarity": 0.592
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 35,
+          "rank": 19,
+          "similarity": 0.5901
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 65,
+          "rank": 20,
+          "similarity": 0.5883
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 2,
+      "recall": 0.5,
+      "best_rank": 1,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "tech-06",
+      "question": "客户数据涉及重要数据，企业应如何分类分级保护？",
+      "contract_type": "external",
+      "expected": [
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 21
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 21,
+          "rank": 1,
+          "similarity": 0.8267
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 40,
+          "rank": 2,
+          "similarity": 0.6453
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 30,
+          "rank": 3,
+          "similarity": 0.6284
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 39,
+          "rank": 4,
+          "similarity": 0.6218
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 7,
+          "rank": 5,
+          "similarity": 0.6204
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 4,
+          "rank": 6,
+          "similarity": 0.6183
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 8,
+          "rank": 7,
+          "similarity": 0.6181
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 1,
+          "rank": 8,
+          "similarity": 0.6147
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 38,
+          "rank": 9,
+          "similarity": 0.6092
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 10,
+          "rank": 10,
+          "similarity": 0.6037
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 29,
+          "rank": 11,
+          "similarity": 0.6005
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 45,
+          "rank": 12,
+          "similarity": 0.5979
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 27,
+          "rank": 13,
+          "similarity": 0.597
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 2,
+          "rank": 14,
+          "similarity": 0.591
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 49,
+          "rank": 15,
+          "similarity": 0.5866
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 39,
+          "rank": 16,
+          "similarity": 0.5853
+        },
+        {
+          "law": "中华人民共和国个人信息保护法",
+          "article_no": 58,
+          "rank": 17,
+          "similarity": 0.5849
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 44,
+          "rank": 18,
+          "similarity": 0.5815
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 13,
+          "rank": 19,
+          "similarity": 0.5812
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 33,
+          "rank": 20,
+          "similarity": 0.5784
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 1,
+      "recall": 1.0,
+      "best_rank": 1,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "tech-07",
+      "question": "网络运营者开展业务，网络安全等级保护义务包括哪些？",
+      "contract_type": "external",
+      "expected": [
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 23
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 23,
+          "rank": 1,
+          "similarity": 0.8186
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 10,
+          "rank": 2,
+          "similarity": 0.7903
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 36,
+          "rank": 3,
+          "similarity": 0.7903
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 30,
+          "rank": 4,
+          "similarity": 0.7629
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 24,
+          "rank": 5,
+          "similarity": 0.7489
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 11,
+          "rank": 6,
+          "similarity": 0.7437
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 31,
+          "rank": 7,
+          "similarity": 0.7408
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 58,
+          "rank": 8,
+          "similarity": 0.7399
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 41,
+          "rank": 9,
+          "similarity": 0.7397
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 42,
+          "rank": 10,
+          "similarity": 0.735
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 33,
+          "rank": 11,
+          "similarity": 0.7273
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 38,
+          "rank": 12,
+          "similarity": 0.7257
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 74,
+          "rank": 13,
+          "similarity": 0.7215
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 27,
+          "rank": 14,
+          "similarity": 0.7175
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 51,
+          "rank": 15,
+          "similarity": 0.714
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 1,
+          "rank": 16,
+          "similarity": 0.7101
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 40,
+          "rank": 17,
+          "similarity": 0.7063
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 37,
+          "rank": 18,
+          "similarity": 0.7056
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 13,
+          "rank": 19,
+          "similarity": 0.705
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 28,
+          "rank": 20,
+          "similarity": 0.7009
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 1,
+      "recall": 1.0,
+      "best_rank": 1,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "tech-08",
+      "question": "企业开展数据处理活动，需要建立哪些数据安全管理制度？",
+      "contract_type": "external",
+      "expected": [
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 27
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 27,
+          "rank": 1,
+          "similarity": 0.7704
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 8,
+          "rank": 2,
+          "similarity": 0.7525
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 1,
+          "rank": 3,
+          "similarity": 0.737
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 10,
+          "rank": 4,
+          "similarity": 0.7306
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 44,
+          "rank": 5,
+          "similarity": 0.7271
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 39,
+          "rank": 6,
+          "similarity": 0.7269
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 2,
+          "rank": 7,
+          "similarity": 0.7194
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 29,
+          "rank": 8,
+          "similarity": 0.718
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 23,
+          "rank": 9,
+          "similarity": 0.7109
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 4,
+          "rank": 10,
+          "similarity": 0.7047
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 19,
+          "rank": 11,
+          "similarity": 0.6931
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 11,
+          "rank": 12,
+          "similarity": 0.6839
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 53,
+          "rank": 13,
+          "similarity": 0.6802
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 45,
+          "rank": 14,
+          "similarity": 0.6802
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 18,
+          "rank": 15,
+          "similarity": 0.6787
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 17,
+          "rank": 16,
+          "similarity": 0.6784
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 13,
+          "rank": 17,
+          "similarity": 0.6739
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 9,
+          "rank": 18,
+          "similarity": 0.6738
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 28,
+          "rank": 19,
+          "similarity": 0.6728
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 20,
+          "rank": 20,
+          "similarity": 0.668
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 1,
+      "recall": 1.0,
+      "best_rank": 1,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "tech-09",
+      "question": "技术开发合同中，员工开发的软件著作权归公司还是员工？",
+      "contract_type": "external",
+      "expected": [
+        {
+          "law": "中华人民共和国著作权法",
+          "article_no": 18
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 860,
+          "rank": 1,
+          "similarity": 0.6507
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 861,
+          "rank": 2,
+          "similarity": 0.6457
+        },
+        {
+          "law": "中华人民共和国著作权法",
+          "article_no": 19,
+          "rank": 3,
+          "similarity": 0.6446
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 855,
+          "rank": 4,
+          "similarity": 0.6432
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 852,
+          "rank": 5,
+          "similarity": 0.6398
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 853,
+          "rank": 6,
+          "similarity": 0.6302
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 845,
+          "rank": 7,
+          "similarity": 0.6298
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 882,
+          "rank": 8,
+          "similarity": 0.6271
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 859,
+          "rank": 9,
+          "similarity": 0.6269
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 857,
+          "rank": 10,
+          "similarity": 0.6229
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 843,
+          "rank": 11,
+          "similarity": 0.6182
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 885,
+          "rank": 12,
+          "similarity": 0.616
+        },
+        {
+          "law": "中华人民共和国著作权法",
+          "article_no": 32,
+          "rank": 13,
+          "similarity": 0.6152
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 883,
+          "rank": 14,
+          "similarity": 0.6128
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 848,
+          "rank": 15,
+          "similarity": 0.6126
+        },
+        {
+          "law": "中华人民共和国著作权法",
+          "article_no": 14,
+          "rank": 16,
+          "similarity": 0.6091
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 851,
+          "rank": 17,
+          "similarity": 0.6084
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 875,
+          "rank": 18,
+          "similarity": 0.6
+        },
+        {
+          "law": "中华人民共和国著作权法",
+          "article_no": 11,
+          "rank": 19,
+          "similarity": 0.5983
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 849,
+          "rank": 20,
+          "similarity": 0.5966
+        }
+      ],
+      "hit_count": 0,
+      "expected_count": 1,
+      "recall": 0.0,
+      "best_rank": null,
+      "bucket": "未召回",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    },
+    {
+      "id": "tech-10",
+      "question": "合作伙伴违反保密义务披露公司商业秘密，公司可以主张什么责任？",
+      "contract_type": "external",
+      "expected": [
+        {
+          "law": "中华人民共和国反不正当竞争法",
+          "article_no": 10
+        },
+        {
+          "law": "中华人民共和国反不正当竞争法",
+          "article_no": 22
+        }
+      ],
+      "retrieved": [
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 501,
+          "rank": 1,
+          "similarity": 0.7249
+        },
+        {
+          "law": "中华人民共和国反不正当竞争法",
+          "article_no": 10,
+          "rank": 2,
+          "similarity": 0.6916
+        },
+        {
+          "law": "中华人民共和国反不正当竞争法",
+          "article_no": 39,
+          "rank": 3,
+          "similarity": 0.656
+        },
+        {
+          "law": "中华人民共和国反不正当竞争法",
+          "article_no": 19,
+          "rank": 4,
+          "similarity": 0.6541
+        },
+        {
+          "law": "中华人民共和国反不正当竞争法",
+          "article_no": 26,
+          "rank": 5,
+          "similarity": 0.649
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 874,
+          "rank": 6,
+          "similarity": 0.636
+        },
+        {
+          "law": "中华人民共和国网络安全法",
+          "article_no": 47,
+          "rank": 7,
+          "similarity": 0.6321
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 872,
+          "rank": 8,
+          "similarity": 0.6318
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 873,
+          "rank": 9,
+          "similarity": 0.624
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 868,
+          "rank": 10,
+          "similarity": 0.6231
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 785,
+          "rank": 11,
+          "similarity": 0.6223
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 973,
+          "rank": 12,
+          "similarity": 0.6163
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 509,
+          "rank": 13,
+          "similarity": 0.609
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 500,
+          "rank": 14,
+          "similarity": 0.6059
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 962,
+          "rank": 15,
+          "similarity": 0.6054
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 186,
+          "rank": 16,
+          "similarity": 0.5981
+        },
+        {
+          "law": "中华人民共和国反不正当竞争法",
+          "article_no": 37,
+          "rank": 17,
+          "similarity": 0.5957
+        },
+        {
+          "law": "中华人民共和国数据安全法",
+          "article_no": 38,
+          "rank": 18,
+          "similarity": 0.5909
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 869,
+          "rank": 19,
+          "similarity": 0.5903
+        },
+        {
+          "law": "中华人民共和国民法典",
+          "article_no": 534,
+          "rank": 20,
+          "similarity": 0.5893
+        }
+      ],
+      "hit_count": 1,
+      "expected_count": 2,
+      "recall": 0.5,
+      "best_rank": 2,
+      "bucket": "1-3",
+      "answer": null,
+      "citation": null,
+      "oracle_answer": null,
+      "oracle_hit": null
+    }
+  ]
+}
