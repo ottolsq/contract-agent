@@ -150,3 +150,33 @@ def build_judge_messages(
         {"role": "system", "content": JUDGE_SYSTEM_PROMPT},
         {"role": "user", "content": user},
     ]
+
+
+SUMMARY_SYSTEM_PROMPT = """你是合同审查报告的汇总者。输入是逐条判定结果，你要写一段整体结论。
+
+【必须包含】
+1. 主要风险集中在哪些条款（写条号）
+2. 哪些条款证据不足或判定失败，需要人工复核
+3. 一句总体判断
+
+【约束】
+- 只依据给出的结构化结果，不得引入新事实或新法条
+- 不超过 200 字
+- 不重复罗列每一条明细"""
+
+
+def build_summary_messages(results: Sequence[dict]) -> list[dict[str, str]]:
+    """汇总只吃结构化结果，不重读合同原文。"""
+    lines = []
+    for item in results:
+        basis = "、".join(
+            f"《{entry['law']}》第{entry['article_no']}条" for entry in item.get("basis") or []
+        ) or "无法条依据"
+        lines.append(
+            f"- {item['clause_no']}｜{item['status']}｜{item.get('risk_level') or '—'}｜{basis}"
+        )
+    user = "【逐条结果】\n" + "\n".join(lines) + "\n\n【任务】按约束写整体结论。"
+    return [
+        {"role": "system", "content": SUMMARY_SYSTEM_PROMPT},
+        {"role": "user", "content": user},
+    ]

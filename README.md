@@ -44,7 +44,7 @@
 | 条款拆分 | 按「第X条 / 一、/ 1.」切分，保留原文 offset 可回溯，超长条款二次切分 | 已完成（W4 批次 2） |
 | 工具集 | `search_law`（语义/词面找条文，模型自选法域）+ `get_article`（按条号精确取原文），失败返回结构化错误 | 已完成（W4 批次 3） |
 | 逐条风险判定 | 有界 ReAct（≤4 步）：模型自己决定查不查、查什么，结论必须带本轮工具返回的法条 | 已完成（W4 批次 4） |
-| 审查报告 | 汇总风险清单、依据法条、整体结论 | W4 |
+| 审查报告 | 分类 → 拆分 → 逐条判定 → 汇总，单条失败降级为 `partial`，支持断点续跑 | 已完成（W4 批次 5） |
 | 多轮追问 | 基于结构化审查结果回答"为什么有风险""怎么改" | W5 |
 | 可视化界面 | Streamlit 双模式界面 + demo | W5 |
 
@@ -102,6 +102,17 @@ curl -N -X POST http://127.0.0.1:8000/api/ask/stream \
 ```
 
 `/api/ask/stream` 的事件顺序：先一条 `{"references": [...]}` 推送命中的法条，再逐 token 推送 `{"delta": ...}`，正文结束后补一条 `{"citations": {...}}` 做 L1 校验，最后 `[DONE]`。
+
+`/api/review/stream` 是整份合同审查，事件顺序：
+
+| 事件 | 含义 |
+|---|---|
+| `{"stage": {"name": "classify" / "split" / "summarize", ...}}` | 阶段进度，分类与拆分各有开始/完成两条 |
+| `{"clause": {"index", "total", "clause_no", "status", "risk_level", "cached"}}` | 每条判定完成，`cached=true` 表示来自断点续跑 |
+| `{"report": {...}}` | 完整报告：`status`（`ok` / `partial`）、逐条结论、`failures`、`summary`、`usage` |
+| `[DONE]` | 结束标记 |
+
+请求体：`{"contract_text": "...", "contract_type": "auto" | "internal" | "external"}`。`auto` 走分类器，显式给出类型则跳过分类，用于复现与评测。单条判定失败不影响其余条款，整份报告标记 `partial`。
 
 > **PowerShell 用户注意**：PowerShell 里 `curl` 是 `Invoke-WebRequest` 的别名，不支持 `-H` / `-d`。请显式使用 `curl.exe`，并把 JSON 写入文件，避免引号被 PowerShell 处理掉：
 
@@ -286,7 +297,7 @@ uv run python scripts/build_index.py --rebuild
 uv run pytest
 ```
 
-200 个用例，分十七类：
+220 个用例，分十九类：
 
 - `tests/test_laws.py`：法规解析（条号、章节、领域标签）
 - `tests/test_eval_dataset.py`：评测集完整性（条数、分布、期望法条存在性）
@@ -301,6 +312,8 @@ uv run pytest
 - `tests/test_verify_text_source.py`：派生文本校验——编造字符、顺序重排、丢段覆盖率、标点缺失只报告不失败、真实样本与官方 `.doc` 的回归比对
 - `tests/test_tools.py`：工具集——参数校验（空白/超长/越界）、法域越界拒绝、结构化错误与 hint、检索故障不抛异常、结果去重、条号精确取文、短名解析、超长截断
 - `tests/test_judge.py`：判定节点——工具调用→结论、**无工具却引用法条被判编造**、空引用却给结论被拒、证据不足通过、短名归一化、风险等级非法、重复动作、连续参数错误、步数用尽、两次解析失败、单次解析失败可恢复、调用失败降级
+- `tests/test_review.py`：编排——事件顺序、逐条降级为 `partial`、**断点续跑不重复判定**、换合同重新开始、显式类型跳过分类、汇总失败退回确定性摘要
+- `tests/test_review_api.py`：`/api/review/stream`——stage/clause/report/[DONE] 顺序、运行失败与参数错误的错误事件、缺 Key 503、空合同/超长/非法类型 422、显式类型透传
 - `tests/test_classify.py`：合同类型识别——规则单侧命中/双侧弃权、JSON 解析、代码块容忍、**低置信度不降级**、判据冲突降级、模型失败降级、`force` 跳过模型
 - `tests/test_evaluate_classify.py`：分类评测——准确率、已判定准确率、降级率、**域过滤丢失**、混淆矩阵、单题失败不中断
 - `tests/test_ask_api.py` + `tests/test_retriever.py`：检索问答接口——`references` 先于 token、检索失败与流中断、空索引提示、参数校验（含空白问题）、法域预设、检索日志、**L1 引用事件（有效 / 无效 / 零引用 / 校验失败降级）**；三种检索模式的调用约定与融合权重
@@ -320,6 +333,7 @@ contract-agent/
 │   ├── clauses.py     # 条款拆分：编号识别、offset 回溯、超长二次切
 │   ├── tools.py       # Agent 工具：search_law / get_article，结构化错误
 │   ├── judge.py       # 条款判定：有界 ReAct + 护栏 + DoD 校验
+│   ├── review.py      # 审查编排：分类→拆分→逐条判定→汇总，断点续跑
 │   ├── retriever.py   # 检索入口：按合同类型选法域，dense / bm25 / 混合融合
 │   ├── citations.py   # 引用解析与 L1 校验
 │   ├── evaluation.py  # 召回率、排名分布与报告对比

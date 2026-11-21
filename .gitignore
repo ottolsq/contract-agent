@@ -26,6 +26,9 @@ data/raw/
 # 演示合同的官方原件（二进制，按 data/samples/README.md 的链接重新下载）
 data/samples/*.doc
 
+# 审查运行状态与断点（本地产物，可按 review_id 重新生成）
+data/runs/
+
 # 向量库与本地运行产物
 data/chroma/
 *.db

@@ -24,3 +24,16 @@ class AskRequest(BaseModel):
         if not value:
             raise ValueError("question 不能为空或仅含空白字符")
         return value
+
+
+class ReviewRequest(BaseModel):
+    contract_text: str = Field(min_length=1, max_length=50000)
+    contract_type: Literal["auto", "internal", "external"] = "auto"
+
+    @field_validator("contract_text")
+    @classmethod
+    def _not_blank(cls, value: str) -> str:
+        value = value.strip()
+        if not value:
+            raise ValueError("contract_text 不能为空或仅含空白字符")
+        return value

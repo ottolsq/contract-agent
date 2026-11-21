@@ -17,7 +17,8 @@ from .evaluation import load_corpus_articles
 from .llm import close_client, stream_chat
 from .prompts import build_messages
 from .retriever import aretrieve
-from .schemas import AskRequest, ChatRequest
+from .review import review_events
+from .schemas import AskRequest, ChatRequest, ReviewRequest
 from .vectorstore import Hit
 
 logger = logging.getLogger("contract_agent")
@@ -250,5 +251,51 @@ async def ask_stream(payload: AskRequest) -> StreamingResponse:
 
     return StreamingResponse(
         _ask_events(settings, payload),
+        media_type="text/event-stream",
+    )
+
+
+async def _review_sse(settings: Settings, payload: ReviewRequest):
+    """把编排事件翻译成 SSE：stage / clause / report，最后 [DONE]。"""
+    trace_id = uuid4().hex[:12]
+    started = time.perf_counter()
+    try:
+        async for event in review_events(
+            payload.contract_text,
+            settings=settings,
+            contract_type=payload.contract_type,
+        ):
+            if event.kind == "report":
+                report = event.payload["report"]
+                _log(
+                    event="review_done",
+                    trace_id=trace_id,
+                    status=report["status"],
+                    clauses=len(report["clauses"]),
+                    failures=len(report["failures"]),
+                    total_ms=round((time.perf_counter() - started) * 1000),
+                )
+                yield _sse({"report": report})
+            elif event.kind == "clause":
+                yield _sse({"clause": event.payload})
+            else:
+                yield _sse({"stage": event.payload})
+        yield _sse("[DONE]")
+    except ValueError as exc:
+        yield _sse({"error": str(exc)})
+    except Exception as exc:
+        # 不把上游细节透传出去，避免泄露服务信息或密钥
+        _log(event="review_failed", trace_id=trace_id, error=type(exc).__name__)
+        yield _sse({"error": "审查失败，请稍后重试"})
+
+
+@app.post("/api/review/stream")
+async def review_stream(payload: ReviewRequest) -> StreamingResponse:
+    settings = get_settings()
+    if not settings.llm_api_key:
+        raise HTTPException(status_code=503, detail="LLM_API_KEY 未配置")
+
+    return StreamingResponse(
+        _review_sse(settings, payload),
         media_type="text/event-stream",
     )
