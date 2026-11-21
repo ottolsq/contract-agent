@@ -341,7 +341,7 @@ uv run python scripts/build_index.py --rebuild
 uv run pytest
 ```
 
-222 个用例，分十九类：
+225 个用例，分十九类：
 
 - `tests/test_laws.py`：法规解析（条号、章节、领域标签）
 - `tests/test_eval_dataset.py`：评测集完整性（条数、分布、期望法条存在性）

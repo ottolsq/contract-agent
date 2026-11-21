@@ -65,6 +65,7 @@ class JudgeResult:
     steps: int = 0
     elapsed_ms: int = 0
     trace: tuple[dict[str, Any], ...] = ()
+    status_derived: bool = False  # status 缺失、由 basis 推导得出
 
     @property
     def ok(self) -> bool:
@@ -167,11 +168,17 @@ def _finish(
     elapsed_ms: int,
     trace: list[dict[str, Any]],
 ) -> JudgeResult:
-    status = str(result.get("status") or "").strip()
-    if status not in STATUSES:
+    raw_status = str(result.get("status") or "").strip()
+    # 有值但不在枚举内 = 内容错误，判死；空值 = 漏填，后面按 basis 推导
+    if raw_status and raw_status not in STATUSES:
         return _failed(
-            clause_no, f"status 非法：{status!r}", steps=steps, elapsed_ms=elapsed_ms, trace=trace
+            clause_no,
+            f"status 非法：{raw_status!r}",
+            steps=steps,
+            elapsed_ms=elapsed_ms,
+            trace=trace,
         )
+    status_derived = not raw_status
 
     raw_basis = result.get("basis_articles") or []
     if not isinstance(raw_basis, list):
@@ -196,7 +203,7 @@ def _finish(
         basis.append(Basis(law=law, article_no=article_no, quote=str(item.get("quote") or "").strip()))
 
     if not basis:
-        if status != "insufficient_evidence":
+        if raw_status == "ok":
             return _failed(
                 clause_no,
                 "没有引用却给出了结论（basis_articles 为空时 status 必须是 insufficient_evidence）",
@@ -212,6 +219,7 @@ def _finish(
             steps=steps,
             elapsed_ms=elapsed_ms,
             trace=tuple(trace),
+            status_derived=status_derived,
         )
 
     fabricated = [f"{b.law}第{b.article_no}条" for b in basis if (b.law, b.article_no) not in whitelist]
@@ -232,7 +240,7 @@ def _finish(
 
     return JudgeResult(
         clause_no=clause_no,
-        status=status,
+        status="insufficient_evidence" if raw_status == "insufficient_evidence" else "ok",
         risk_level=risk,
         basis=tuple(basis),
         reasoning=str(result.get("reasoning") or "").strip(),
@@ -240,6 +248,7 @@ def _finish(
         steps=steps,
         elapsed_ms=elapsed_ms,
         trace=tuple(trace),
+        status_derived=status_derived,
     )
 
 

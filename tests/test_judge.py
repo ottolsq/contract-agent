@@ -140,6 +140,73 @@ async def test_invalid_final_twice_still_fails(monkeypatch):
     assert result.status == "failed"
 
 
+async def test_missing_status_is_derived_when_basis_present(monkeypatch):
+    """漏填 status 不该判死：没有引用才叫证据不足，有引用就是有结论。"""
+    payload = json.dumps(
+        {
+            "action": "final",
+            "result": {
+                "clause_no": "第二十四条",
+                "risk_level": "high",
+                "basis_articles": [{"law": LAW, "article_no": 24, "quote": "摘录"}],
+                "reasoning": "理由",
+                "suggestion": "建议",
+            },
+        },
+        ensure_ascii=False,
+    )
+    scripted(monkeypatch, [tool_step(), payload])
+
+    result = await judge.judge_clause(CLAUSE, contract_type="internal", settings=_settings())
+
+    assert result.status == "ok"
+    assert result.status_derived is True
+    assert result.risk_level == "high"
+
+
+async def test_missing_status_without_basis_derives_insufficient(monkeypatch):
+    payload = json.dumps(
+        {
+            "action": "final",
+            "result": {
+                "clause_no": "第二十四条",
+                "basis_articles": [],
+                "reasoning": "查不到",
+                "suggestion": "人工确认",
+            },
+        },
+        ensure_ascii=False,
+    )
+    scripted(monkeypatch, [payload])
+
+    result = await judge.judge_clause(CLAUSE, contract_type="internal", settings=_settings())
+
+    assert result.status == "insufficient_evidence"
+    assert result.status_derived is True
+
+
+async def test_unknown_status_value_still_fails(monkeypatch):
+    """有值但不在枚举里是内容错误，不是漏填——照旧判死。"""
+    payload = json.dumps(
+        {
+            "action": "final",
+            "result": {
+                "clause_no": "第二十四条",
+                "status": "done",
+                "risk_level": "high",
+                "basis_articles": [{"law": LAW, "article_no": 24, "quote": "摘录"}],
+            },
+        },
+        ensure_ascii=False,
+    )
+    scripted(monkeypatch, [tool_step(), payload])
+
+    result = await judge.judge_clause(CLAUSE, contract_type="internal", settings=_settings())
+
+    assert result.status == "failed"
+    assert "status 非法" in result.failure_reason
+
+
 async def test_invalid_risk_level_is_rejected(monkeypatch):
     scripted(monkeypatch, [tool_step(), final_step(risk="catastrophic")])
 
