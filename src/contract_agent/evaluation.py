@@ -19,6 +19,8 @@ CONFIG_KEYS = (
     "rank_depth",
     "embedding_model",
     "llm_model",
+    # 检索模式进入配置键：dense 与 hybrid 的 Recall 不可直接互相比较
+    "retrieval_mode",
 )
 
 

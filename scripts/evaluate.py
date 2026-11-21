@@ -271,6 +271,8 @@ def main(argv: list[str] | None = None) -> int:
             "llm_model": settings.llm_model,
             "top_k": args.top_k,
             "rank_depth": args.rank_depth,
+            "retrieval_mode": settings.retrieval_mode,
+            "hybrid_bm25_weight": settings.hybrid_bm25_weight,
             "generated_at": datetime.now().isoformat(timespec="seconds"),
         },
         "metrics": metrics,
