@@ -30,6 +30,7 @@ DOMAIN_PRESETS: dict[str, tuple[str, ...]] = {
 }
 
 MODES = ("hybrid", "dense", "bm25")
+ALL_DOMAINS = ("labor", "civil", "tech")
 
 
 def domains_for(contract_type: str) -> tuple[str, ...]:
@@ -107,6 +108,37 @@ def _fuse(
     return [_hit(payload[key], score) for key, score in ordered[:top_k]]
 
 
+def retrieve_domains(
+    query: str,
+    domains: Sequence[str],
+    top_k: int = 5,
+    settings: Settings | None = None,
+    mode: str | None = None,
+) -> list[Hit]:
+    """在给定法域集合内检索。工具层用它支持"模型自选法域"，但仍受调用方约束。"""
+    if not query.strip():
+        raise ValueError("query 不能为空")
+    if top_k <= 0:
+        raise ValueError("top_k 必须大于 0")
+    if not domains:
+        raise ValueError("domains 不能为空")
+    unknown = set(domains) - set(ALL_DOMAINS)
+    if unknown:
+        raise ValueError(f"未知法域 {sorted(unknown)}，可选：{', '.join(ALL_DOMAINS)}")
+
+    settings = settings or get_settings()
+    resolved = mode or settings.retrieval_mode
+    if resolved not in MODES:
+        raise ValueError(f"未知检索模式 {resolved!r}，可选：{', '.join(MODES)}")
+
+    ordered = tuple(dict.fromkeys(domains))  # 去重且保持调用方顺序
+    if resolved == "dense":
+        return _dense(query, ordered, top_k, settings)
+    if resolved == "bm25":
+        return [_hit(doc, score) for doc, score in _bm25(query, ordered, settings)[:top_k]]
+    return _fuse(query, ordered, top_k, settings)
+
+
 def retrieve(
     query: str,
     contract_type: str = "all",
@@ -115,23 +147,7 @@ def retrieve(
     mode: str | None = None,
 ) -> list[Hit]:
     """按合同类型检索法条。mode 为空时取配置里的 retrieval_mode。"""
-    if not query.strip():
-        raise ValueError("query 不能为空")
-    if top_k <= 0:
-        raise ValueError("top_k 必须大于 0")
-
-    settings = settings or get_settings()
-    resolved = mode or settings.retrieval_mode
-    if resolved not in MODES:
-        raise ValueError(f"未知检索模式 {resolved!r}，可选：{', '.join(MODES)}")
-
-    domains = domains_for(contract_type)
-
-    if resolved == "dense":
-        return _dense(query, domains, top_k, settings)
-    if resolved == "bm25":
-        return [_hit(doc, score) for doc, score in _bm25(query, domains, settings)[:top_k]]
-    return _fuse(query, domains, top_k, settings)
+    return retrieve_domains(query, domains_for(contract_type), top_k, settings, mode)
 
 
 async def aretrieve(
