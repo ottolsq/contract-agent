@@ -35,7 +35,7 @@
 |---|---|---|
 | 法规知识库 | 18 部法规、1907 条，按条切分，标注劳动 / 民事 / 技术领域 | 已完成（W1） |
 | 流式对话 | FastAPI 接口，逐 token 输出 | 已完成（W1） |
-| 法条检索 | 向量检索 + 领域过滤，返回 top-k 法条 | 已完成（W2） |
+| 法条检索 | 向量 + BM25 混合检索（可切 dense / bm25），领域过滤，返回 top-k 法条 | 已完成（W2，W3 后增强） |
 | 检索日志 | `trace_id` + 结构化日志，记录命中的法条与相似度 | 已完成（W2） |
 | 知识库问答 | 针对劳动 / 商业 / 技术法规提问，提示词约束必须标注法条依据 | 已完成（W2） |
 | 评测基线 | 30 条标注问题，检索召回率（含排名分布）+ 引用准确率 L1 | 已完成（W3） |
@@ -127,7 +127,23 @@ uv run python scripts/evaluate.py --mode full --oracle
 
 报告写入 `reports/<时间>-<数据集>.json`，包含 Recall micro/macro、MRR、排名分布和逐题明细；full 模式另含 `citation_l1` / `citation_coverage`，`--oracle` 另含 `oracle_hit_rate`。默认与同配置的上一份报告对比，`--no-compare` 可跳过；full 模式可加 `--fail-under-l1 0.9` 做引用门禁。
 
-首轮基线（30 题）：Recall micro 0.6585、L1 0.9477、coverage 100%、oracle 100%。检索是瓶颈；W3 复盘见外层工作区的 `reviews/W3.md`。
+首轮基线（dense，30 题）：Recall micro 0.6585、L1 0.9477、coverage 100%、oracle 100%。
+
+混合检索基线（2026-11-21，同一份评测集）：Recall micro **0.8293**、macro 0.8500、MRR 0.7590；排名分布 1–3 名 90.0%、未召回 **0** 条（dense 时为 4 条）。W3 复盘见外层工作区的 `reviews/W3.md`。
+
+## 检索：为什么是混合
+
+`RETRIEVAL_MODE` 可选 `hybrid`（默认）/ `dense` / `bm25`。
+
+W3 基线暴露出 4 道完全召不回的题（labor-02 / civil-10 / tech-01 / tech-09）。逐条排查后排除了索引缺失、切分错误和域过滤，结论是**词汇鸿沟**：问题用口语描述（"离职后不得从事同类业务""业务员超越授权"），法条用术语（"竞业限制""无权代理"），512 维向量跨不过去。而这 4 题的期望法条词面重合率都高于被误排到 top1 的条文——信号在，是排序丢了它。
+
+因此加了 BM25 作为第二路召回，两路各自 min-max 归一化后加权融合（`HYBRID_BM25_WEIGHT`，默认 0.7）。注意：
+
+- **必须先归一化再相加**，余弦相似度和 BM25 分数量纲不同，直接相加没有意义
+- 标准 RRF 在这里无效（实测与 BM25 单跑持平）：两路列表高度重叠，RRF 会奖励"两边都排中游"的条目，稀释单项强命中
+- 0.7 是在这份 30 题评测集上做留一法（30 折全部选中 0.7）选出来的，**样本量小，扩集后需要复核**
+
+BM25 侧按中文字符二元组切分，不引入分词器依赖；索引在内存惰性构建，缓存键带文件 mtime，语料更新后自动重建。
 
 ## 收录的法规
 
@@ -219,7 +235,7 @@ uv run python scripts/build_index.py --rebuild
 uv run pytest
 ```
 
-83 个用例，分十类：
+103 个用例，分十一类：
 
 - `tests/test_laws.py`：法规解析（条号、章节、领域标签）
 - `tests/test_eval_dataset.py`：评测集完整性（条数、分布、期望法条存在性）
@@ -229,7 +245,8 @@ uv run pytest
 - `tests/test_api.py`：对话接口契约与 SSE 流式格式
 - `tests/test_resilience.py`：**故障注入 + 重试**——上游 429 / 超时 / 畸形响应 / 流式中途断开 / 缺 Key，验证不崩溃且不泄露上游细节；并验证 429 会自动重试、400 不会重试
 - `tests/test_prompts.py`：提示词构造——引用格式、空召回标记、长条文截断、数据块标签转义、注入内容只作为数据
-- `tests/test_ask_api.py` + `tests/test_retriever.py`：检索问答接口——`references` 先于 token、检索失败与流中断、空索引提示、参数校验（含空白问题）、法域预设、检索日志
+- `tests/test_bm25.py`：词面检索——中文二元组分词、域过滤、归一化、**单一文档域不被归零过滤**、真实语料回归
+- `tests/test_ask_api.py` + `tests/test_retriever.py`：检索问答接口——`references` 先于 token、检索失败与流中断、空索引提示、参数校验（含空白问题）、法域预设、检索日志；三种检索模式的调用约定与融合权重
 - `tests/test_vectorstore.py`：**模型不匹配报错**、空库跳过校验、索引重建后句柄自动重取、建库去重
 
 ## 目录结构
@@ -241,7 +258,8 @@ contract-agent/
 │   ├── llm.py         # OpenAI 兼容接口封装
 │   ├── embeddings.py  # BGE 中文向量化（sentence-transformers）
 │   ├── vectorstore.py # Chroma 索引：写入与元数据过滤检索
-│   ├── retriever.py   # 检索入口：按合同类型选法域
+│   ├── bm25.py        # BM25 词面检索：中文二元组、域内归一化
+│   ├── retriever.py   # 检索入口：按合同类型选法域，dense / bm25 / 混合融合
 │   ├── citations.py   # 引用解析与 L1 校验
 │   ├── evaluation.py  # 召回率、排名分布与报告对比
 │   ├── prompts.py     # 带引用约束与注入防护的提示词
