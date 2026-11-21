@@ -57,3 +57,27 @@ async def stream_chat(
         delta = chunk.choices[0].delta.content
         if delta:
             yield delta
+
+
+async def complete(
+    settings: Settings,
+    messages: list[dict[str, str]],
+    *,
+    temperature: float | None = None,
+    max_tokens: int | None = None,
+) -> str:
+    """非流式补全：需要拿到完整结果再解析的场景（分类、结构化判定）用它。
+
+    温度默认走配置；分类这类确定性任务由调用方传 0.0。
+    """
+    client = get_client(settings)
+    response: Any = await client.chat.completions.create(
+        model=settings.llm_model,
+        messages=messages,
+        temperature=settings.llm_temperature if temperature is None else temperature,
+        max_tokens=settings.llm_max_tokens if max_tokens is None else max_tokens,
+        stream=False,
+    )
+    if not response.choices:
+        return ""
+    return response.choices[0].message.content or ""
