@@ -7,6 +7,7 @@ import pytest
 from contract_agent.clauses import split_clauses
 
 SAMPLE = Path(__file__).resolve().parents[1] / "data" / "samples" / "tech-development-contract.txt"
+LABOR_SAMPLE = Path(__file__).resolve().parents[1] / "data" / "samples" / "labor-contract.txt"
 
 
 def test_article_headings_are_split_with_offsets():
@@ -141,3 +142,16 @@ def test_real_sample_splits_into_29_articles():
     # 签署块不进入最后一条（第二十九条正文本身含"签字盖章"，所以查签署块特征）
     assert result.clauses[-1].text.endswith("生效。")
     assert "法定代表人" not in result.clauses[-1].text
+
+
+def test_labor_sample_splits_into_25_articles():
+    """对内样本：正文前有"注意事项"和"一、二、"分节，不能干扰条款识别。"""
+    text = LABOR_SAMPLE.read_text(encoding="utf-8")
+    result = split_clauses(text)
+
+    assert result.method == "article"
+    assert len(result.clauses) == 25
+    assert result.clauses[0].clause_no == "第一条"
+    assert result.clauses[-1].clause_no == "第二十五条"
+    assert all(text[c.start : c.end] == c.text for c in result.clauses)
+    assert "甲方（盖章）" not in result.clauses[-1].text
