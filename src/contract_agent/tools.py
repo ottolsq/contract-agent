@@ -194,6 +194,13 @@ def get_article(raw: dict[str, Any], *, settings: Settings | None = None) -> dic
     }
 
 
+def law_aliases(settings: Settings | None = None) -> dict[str, str]:
+    """语料里的法律名别名表（全名 → 全名，简称 → 全名）。判定节点用它归一化模型写的法名。"""
+    settings = settings or get_settings()
+    index = _article_index(settings)
+    return {} if index is None else dict(index[1])
+
+
 def _truncate(text: str) -> str:
     text = text.strip()
     return text if len(text) <= MAX_ARTICLE_CHARS else text[:MAX_ARTICLE_CHARS] + "……"
