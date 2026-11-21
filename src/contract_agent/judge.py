@@ -29,7 +29,7 @@ from .llm import complete
 from .prompts import build_judge_messages
 from .retriever import domains_for
 
-MAX_STEPS = 4
+MAX_STEPS = 6
 DEADLINE_SECONDS = 120.0
 RISK_LEVELS = ("high", "medium", "low", "none")
 STATUSES = ("ok", "insufficient_evidence")
@@ -265,6 +265,7 @@ async def judge_clause(
     repeat_warnings = 0
     argument_errors = 0
     parse_errors = 0
+    repairs = 0
 
     def elapsed() -> int:
         return round((time.perf_counter() - started) * 1000)
@@ -297,7 +298,7 @@ async def judge_clause(
             continue
 
         if decision.action == "final":
-            return _finish(
+            outcome = _finish(
                 clause.clause_no,
                 decision.result,
                 whitelist,
@@ -306,6 +307,21 @@ async def judge_clause(
                 elapsed_ms=elapsed(),
                 trace=trace,
             )
+            # 校验失败若还是模型能自己改的（缺字段、枚举值错、引用不在白名单），
+            # 给一次修正机会再判死——否则一次格式失误就报废整条，而步数还有富余
+            if outcome.status == "failed" and repairs < 1 and step < max_steps:
+                repairs += 1
+                history.append(
+                    f"第 {step} 步的最终结论未通过校验：{outcome.failure_reason}\n"
+                    "修正要求：\n"
+                    "- status 必填，只能是 ok 或 insufficient_evidence\n"
+                    "- basis_articles 为空时 status 必须是 insufficient_evidence，且不要给 risk_level\n"
+                    "- basis_articles 里的每一条都必须是本轮工具返回过的条文\n"
+                    "- risk_level 只能是 high / medium / low / none\n"
+                    "请直接重新输出 final。"
+                )
+                continue
+            return outcome
 
         signature = _canonical(decision.tool, decision.args)
         if signature == last_action:

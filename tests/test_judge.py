@@ -119,6 +119,27 @@ async def test_short_law_name_is_normalized_against_whitelist(monkeypatch):
     assert result.basis[0].law == LAW
 
 
+async def test_invalid_final_gets_one_repair(monkeypatch):
+    """一次格式失误不该报废整条：校验失败先回灌，模型改了就算过。"""
+    bad = final_step(basis=[], status="ok")
+    good = final_step(basis=[], status="insufficient_evidence")
+    scripted(monkeypatch, [tool_step(), bad, good])
+
+    result = await judge.judge_clause(CLAUSE, contract_type="internal", settings=_settings())
+
+    assert result.status == "insufficient_evidence"
+    assert result.steps == 3
+
+
+async def test_invalid_final_twice_still_fails(monkeypatch):
+    bad = final_step(basis=[], status="ok")
+    scripted(monkeypatch, [tool_step(), bad, bad, bad])
+
+    result = await judge.judge_clause(CLAUSE, contract_type="internal", settings=_settings())
+
+    assert result.status == "failed"
+
+
 async def test_invalid_risk_level_is_rejected(monkeypatch):
     scripted(monkeypatch, [tool_step(), final_step(risk="catastrophic")])
 
