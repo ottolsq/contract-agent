@@ -12,6 +12,8 @@ dist/
 .mypy_cache/
 .coverage
 htmlcov/
+pytest-of-ottol/
+.pytest_tmp/
 
 # 环境变量与密钥
 .env
