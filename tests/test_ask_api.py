@@ -11,6 +11,9 @@ from httpx import ASGITransport, AsyncClient
 from contract_agent import config, main
 from contract_agent.vectorstore import Hit
 
+# 默认 fixture 会把 _citation_report 替换掉，这里先存下真实实现供引用用例使用
+_REAL_CITATION_REPORT = main._citation_report
+
 PAYLOAD = {"question": "试用期能设多长？", "contract_type": "internal", "top_k": 2}
 
 
@@ -23,6 +26,8 @@ def isolate_settings(monkeypatch):
     monkeypatch.setattr(main, "get_settings", lambda: test_settings)
     # 默认不碰真实索引；需要空索引的用例自行覆盖
     monkeypatch.setattr(main.vectorstore, "count", lambda *args, **kwargs: 1907)
+    # 默认不读真实语料；引用相关用例自行覆盖
+    monkeypatch.setattr(main, "_citation_report", lambda answer, settings: None)
     yield test_settings
 
 
@@ -201,3 +206,103 @@ async def test_retrieval_is_logged_with_trace_id(monkeypatch, caplog):
     assert retrieve["hits"] == ["中华人民共和国劳动合同法#19"]
     assert retrieve["top_similarity"] == 0.8123
     assert retrieve["trace_id"]
+
+
+def _citations_payload(events: list[object]) -> dict | None:
+    for event in events:
+        if isinstance(event, dict) and "citations" in event:
+            return event["citations"]
+    return None
+
+
+async def test_citations_event_reports_valid_reference(monkeypatch):
+    monkeypatch.setattr(main, "_citation_report", _REAL_CITATION_REPORT)
+
+    async def fake_stream(settings, messages):
+        yield "依据《中华人民共和国劳动合同法》第十九条，试用期不得超过六个月。"
+
+    response = await _post(monkeypatch, stream=fake_stream)
+    events = _events(response.text)
+
+    payload = _citations_payload(events)
+    assert payload is not None
+    assert payload["total"] == 1
+    assert payload["valid"] == 1
+    assert payload["invalid"] == 0
+    assert payload["accuracy"] == 1.0
+    assert payload["has_valid"] is True
+    assert "invalid_refs" not in payload
+    # 引用校验必须在正文之后、[DONE] 之前
+    assert events[-1] == "[DONE]"
+    citation_event = next(e for e in events if isinstance(e, dict) and "citations" in e)
+    assert events.index(citation_event) == len(events) - 2
+
+
+async def test_citations_event_lists_invalid_reference(monkeypatch):
+    monkeypatch.setattr(main, "_citation_report", _REAL_CITATION_REPORT)
+
+    async def fake_stream(settings, messages):
+        yield "依据《中华人民共和国劳动合同法》第九百九十九条。"
+
+    response = await _post(monkeypatch, stream=fake_stream)
+
+    payload = _citations_payload(_events(response.text))
+    assert payload["invalid"] == 1
+    assert payload["accuracy"] == 0.0
+    assert payload["has_valid"] is False
+    assert payload["invalid_refs"] == [
+        {"law": "中华人民共和国劳动合同法", "article_no": 999}
+    ]
+
+
+async def test_answer_without_citations_reports_zero(monkeypatch):
+    monkeypatch.setattr(main, "_citation_report", _REAL_CITATION_REPORT)
+
+    async def fake_stream(settings, messages):
+        yield "依据现有法条无法确定。"
+
+    response = await _post(monkeypatch, stream=fake_stream, hits=[])
+
+    payload = _citations_payload(_events(response.text))
+    assert payload["total"] == 0
+    assert payload["accuracy"] is None
+    assert payload["has_valid"] is False
+
+
+async def test_citation_failure_degrades_without_breaking_stream(monkeypatch):
+    def boom(answer, settings):
+        raise RuntimeError("corpus unreadable")
+
+    monkeypatch.setattr(main, "_citation_report", boom)
+
+    async def fake_stream(settings, messages):
+        yield "试用期"
+
+    response = await _post(monkeypatch, stream=fake_stream)
+    events = _events(response.text)
+
+    assert _citations_payload(events) is None
+    assert events[-1] == "[DONE]"
+
+
+async def test_citations_are_logged(monkeypatch, caplog):
+    caplog.set_level(logging.INFO, logger="contract_agent")
+    monkeypatch.setattr(main, "_citation_report", _REAL_CITATION_REPORT)
+
+    async def fake_stream(settings, messages):
+        yield "《中华人民共和国劳动合同法》第十九条"
+
+    await _post(monkeypatch, stream=fake_stream)
+
+    records = [
+        json.loads(record.message)
+        for record in caplog.records
+        if record.name == "contract_agent"
+    ]
+    citation_log = next(r for r in records if r["event"] == "citations")
+    assert citation_log["total"] == 1
+    assert citation_log["valid"] == 1
+    assert citation_log["accuracy"] == 1.0
+
+    done_log = next(r for r in records if r["event"] == "ask_done")
+    assert done_log["citations"] == 1

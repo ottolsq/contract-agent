@@ -3,13 +3,17 @@ import json
 import logging
 import time
 from contextlib import asynccontextmanager
+from functools import lru_cache
+from pathlib import Path
 from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 
 from . import embeddings, vectorstore
+from .citations import build_aliases, validate_citations
 from .config import Settings, get_settings
+from .evaluation import load_corpus_articles
 from .llm import close_client, stream_chat
 from .prompts import build_messages
 from .retriever import aretrieve
@@ -87,6 +91,49 @@ def _references(hits: list[Hit]) -> list[dict[str, object]]:
     ]
 
 
+@lru_cache(maxsize=2)
+def _corpus_citation_index(
+    path: str, mtime: float
+) -> tuple[frozenset[tuple[str, int]], dict[str, str]]:  # noqa: ARG001 mtime 只用于失效
+    """语料里真实存在的 (法律名, 条号) 集合，以及短名别名表。
+
+    与评测脚本共用同一份语料，保证接口报的 L1 和 W3 报的 L1 口径一致。
+    """
+    keys = frozenset(load_corpus_articles(Path(path)))
+    return keys, build_aliases(law for law, _ in keys)
+
+
+def _citation_report(answer: str, settings: Settings) -> dict[str, object] | None:
+    """L1 校验：回答里引用的条号是否真实存在于语料。
+
+    只做可观测，不做门禁——正文已经流给用户了，中途拦截会自相矛盾。
+    门禁交给评测脚本（`--fail-under-l1`）。
+    """
+    path = Path(settings.laws_jsonl)
+    if not answer.strip() or not path.exists():
+        return None
+
+    keys, aliases = _corpus_citation_index(str(path), path.stat().st_mtime)
+    report = validate_citations(answer, keys, aliases)
+
+    payload: dict[str, object] = {
+        "total": report.total,
+        "valid": report.valid,
+        "invalid": report.invalid,
+        "unresolved": report.unresolved,
+        "accuracy": None if report.accuracy is None else round(report.accuracy, 4),
+        "has_valid": report.has_valid,
+    }
+    invalid_refs = [
+        {"law": citation.law or citation.law_raw, "article_no": citation.article_no}
+        for citation in report.resolved
+        if not citation.valid
+    ]
+    if invalid_refs:
+        payload["invalid_refs"] = invalid_refs
+    return payload
+
+
 async def _chat_events(settings: Settings, messages: list[dict[str, str]]):
     try:
         async for token in stream_chat(settings, messages):
@@ -148,10 +195,12 @@ async def _ask_events(settings: Settings, payload: AskRequest):
     yield _sse({"references": _references(hits)})
 
     messages = build_messages(payload.question, hits, payload.contract_type)
+    chunks: list[str] = []
+    citation_total: int | None = None
     try:
         async for token in stream_chat(settings, messages):
+            chunks.append(token)
             yield _sse({"delta": token})
-        yield _sse("[DONE]")
     except Exception as exc:
         _log(
             event="generate_failed",
@@ -159,12 +208,37 @@ async def _ask_events(settings: Settings, payload: AskRequest):
             error=type(exc).__name__,
         )
         yield _sse({"error": "模型服务调用失败，请稍后重试"})
+    else:
+        # 校验失败不能拖垮已经完成的回答：降级成"没有引用信息"，正文照常交付
+        try:
+            report = _citation_report("".join(chunks), settings)
+        except Exception as exc:
+            _log(
+                event="citations_failed",
+                trace_id=trace_id,
+                error=type(exc).__name__,
+            )
+            report = None
+
+        if report is not None:
+            citation_total = int(report["total"])  # type: ignore[arg-type]
+            yield _sse({"citations": report})
+            _log(
+                event="citations",
+                trace_id=trace_id,
+                total=report["total"],
+                valid=report["valid"],
+                invalid=report["invalid"],
+                accuracy=report["accuracy"],
+            )
+        yield _sse("[DONE]")
     finally:
         _log(
             event="ask_done",
             trace_id=trace_id,
             total_ms=round((time.perf_counter() - started) * 1000),
             references=len(hits),
+            citations=citation_total,
         )
 
 
