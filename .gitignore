@@ -23,6 +23,9 @@ pytest-of-ottol/
 # 原始法规文本（可通过 scripts/fetch_laws.py 重新下载）
 data/raw/
 
+# 演示合同的官方原件（二进制，按 data/samples/README.md 的链接重新下载）
+data/samples/*.doc
+
 # 向量库与本地运行产物
 data/chroma/
 *.db
