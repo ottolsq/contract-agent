@@ -452,7 +452,7 @@ Expected: 报告含 `citation_l1`、`citation_coverage`、`oracle_hit_rate`
 
 - [ ] **Step 3: 写 W3 复盘**
 
-按 W1/W2 的结构写 `reviews/W3.md`：目标与完成情况、指标结果、排名分布、oracle 结论、是否加 rerank / rewrite 的判断、面试问答、30 秒/2 分钟讲述稿。
+按 W1/W2 的结构写 `reviews/W3.md`：目标与完成情况、指标结果、排名分布、oracle 结论、是否加 rerank / rewrite 的判断、设计问答、30 秒/2 分钟讲解稿。
 
 - [ ] **Step 4: 同步文档**
 
