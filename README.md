@@ -173,6 +173,28 @@ BM25 侧按中文字符二元组切分，不引入分词器依赖；索引在内
 - 评测输入是问题文本，不是完整合同；真实合同的关键词密度更高，这份数字偏保守
 - 关键词规则按"主题"判，而 tech 域里有些场景应按"当事方"判。当前 3 次降级里有 2 次是规则误判、模型判断才对——只有 2 例，不足以改规则，等真实合同验证
 
+## 文本导入校验
+
+从二进制文档或网页转出的文本，进入仓库或作为事实陈述之前，必须过一遍 `scripts/verify_text_source.py`：
+
+```bash
+uv run python scripts/verify_text_source.py \
+  --source data/samples/xxx.doc \
+  --derived data/samples/xxx.txt
+```
+
+它只回答三个问题，退出码非 0 即不得使用：
+
+| 检查 | 失败意味着 |
+|---|---|
+| 派生文本有无源文档没有的字符 | 编造或改写过内容 |
+| 派生文本是否为源的非空白子序列 | 顺序被重排、段落被拼接错位 |
+| 汉字覆盖率是否达标（默认 0.99） | 大段内容丢失 |
+
+它**不**判断源文档本身是否可信——转载页还是官方原件，属于来源问题，记在 `data/samples/README.md`。
+
+支持 `.doc` / `.docx` / `.txt`。其中 `.doc` 的解析是自行实现的：官方模板常用 WPS 生成，LibreOffice 系转换器会以 `invalid or truncated compound-file header` 直接拒绝，所以不能依赖通用转换工具。
+
 ## 收录的法规
 
 主要来源：[国家法律法规数据库 flk.npc.gov.cn](https://flk.npc.gov.cn/)（搜索入口：https://flk.npc.gov.cn/search），官方 DOCX 手动下载后由 `scripts/import_official_laws.py` 导入，覆盖 17 部、1887 条。
@@ -263,7 +285,7 @@ uv run python scripts/build_index.py --rebuild
 uv run pytest
 ```
 
-150 个用例，分十四类：
+163 个用例，分十五类：
 
 - `tests/test_laws.py`：法规解析（条号、章节、领域标签）
 - `tests/test_eval_dataset.py`：评测集完整性（条数、分布、期望法条存在性）
@@ -275,6 +297,7 @@ uv run pytest
 - `tests/test_prompts.py`：提示词构造——引用格式、空召回标记、长条文截断、数据块标签转义、注入内容只作为数据
 - `tests/test_bm25.py`：词面检索——中文二元组分词、域过滤、归一化、**单一文档域不被归零过滤**、真实语料回归
 - `tests/test_clauses.py`：条款拆分——三种编号格式、条款内子项不误切、**乱序编号回退单条**、正文引用不误命中、签署块裁剪、超长二次切、offset 回溯、真实样本 29 条
+- `tests/test_verify_text_source.py`：派生文本校验——编造字符、顺序重排、丢段覆盖率、标点缺失只报告不失败、真实样本与官方 `.doc` 的回归比对
 - `tests/test_classify.py`：合同类型识别——规则单侧命中/双侧弃权、JSON 解析、代码块容忍、**低置信度不降级**、判据冲突降级、模型失败降级、`force` 跳过模型
 - `tests/test_evaluate_classify.py`：分类评测——准确率、已判定准确率、降级率、**域过滤丢失**、混淆矩阵、单题失败不中断
 - `tests/test_ask_api.py` + `tests/test_retriever.py`：检索问答接口——`references` 先于 token、检索失败与流中断、空索引提示、参数校验（含空白问题）、法域预设、检索日志、**L1 引用事件（有效 / 无效 / 零引用 / 校验失败降级）**；三种检索模式的调用约定与融合权重
@@ -304,7 +327,8 @@ contract-agent/
 │   ├── fetch_laws.py           # 镜像下载（补充）
 │   ├── prepare_laws.py         # 镜像 Markdown 解析
 │   ├── build_index.py          # 条文 JSONL → 向量索引
-│   └── evaluate.py             # 评测入口
+│   ├── evaluate.py             # 评测入口
+│   └── verify_text_source.py   # 校验派生文本是否忠实于源文档
 ├── tests/
 ├── data/
 │   ├── raw/           # 原始法规文件（不入库）
