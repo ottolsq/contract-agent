@@ -2,6 +2,21 @@
 
 > 项目级指令，只在 `contract-agent/` 下生效。优先于用户全局 `AGENTS.md`，但不覆盖 system、developer 与用户当轮的指令。
 
+## 命令
+
+```bash
+uv sync                                                          # 安装依赖（pyproject + uv.lock）
+uv run pytest                                                    # 全量测试（225 用例）
+uv run python scripts/build_index.py --rebuild                   # 构建法条索引（约 30 秒）
+uv run uvicorn contract_agent.main:app --reload --app-dir src    # 启动服务（默认 8000）
+uv run python scripts/evaluate.py --mode retrieval --fail-under 0.6   # 检索门禁
+uv run python scripts/evaluate.py --mode full --fail-under-l1 0.9     # 引用门禁
+uv run python scripts/evaluate.py --mode classify                     # 分类评测
+python check-status.py                                           # 文档数字与实测一致性
+```
+
+以上命令来自 `pyproject.toml`、`README.md`、`scripts/`；改命令时同步更新本表。
+
 ## 完成定义（可执行，不靠"看起来对了"）
 
 - **改代码**：`uv run pytest` 必须全绿。当前沙箱环境有 8 个用例因无法创建临时目录而 ERROR，属环境限制；本机应全部通过，**新增失败一律不允许**。
@@ -22,7 +37,7 @@
 
 未试过 `office_convert` 之前，不得声称"没有现成工具"。
 
-## 仓库边界
+## 禁止事项（仓库边界）
 
 - 只写产品与设计，不写个人计划类表述
 - 合同样本只用公开来源，来源、制定机关、获取日期记进 `data/samples/README.md`
